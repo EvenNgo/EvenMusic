@@ -634,6 +634,10 @@ label.mini { display: inline-flex; align-items: center; gap: 8px; font-size: .86
 .ltable th, .ltable td { padding: 6px 12px 6px 0; border-bottom: 1px solid var(--line-2); text-align: left; }
 .ltable th { font-size: .8rem; font-weight: 650; color: var(--ink-2); }
 .ltable .lchip { margin: 0; }
+.drumgrid { min-width: 560px; }
+.drumgrid th, .drumgrid td { padding: 5px 4px; text-align: center; }
+.drumgrid th:first-child, .drumgrid td:first-child { text-align: left; padding-right: 12px; white-space: nowrap; }
+.drumgrid .beat { background: var(--panel); }
 
 /* ------------------------------------------------------------------ */
 /* Cài đặt & thông báo                                                 */
