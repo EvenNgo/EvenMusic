@@ -280,7 +280,11 @@
       <div id="t-settings" class="train-settings"></div>
       <div class="quiz">
         <div class="quiz-top">
-          <p id="t-prompt" class="prompt" aria-live="polite"></p>
+          <div>
+            <p id="t-prompt" class="prompt" aria-live="polite"></p>
+            <p id="t-sub" class="prompt-sub" hidden></p>
+          </div>
+          <span id="t-timer" class="timer" aria-hidden="true" hidden></span>
           <div class="row gap">
             <button type="button" class="btn ghost sm" id="t-replay"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg></span><span>Nghe lại</span></button>
             <span id="t-extra"></span>

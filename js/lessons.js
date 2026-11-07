@@ -4,6 +4,7 @@
  *   data-seq="60,62,64"   phát lần lượt từng nốt (số MIDI, 60 = C4)
  *   data-play="60,64,67"  phát cùng lúc
  *   data-chord="C:maj7"   phát một hợp âm theo tên
+ *   data-prog="D:m7,G:7,C:maj7"  phát lần lượt một vòng hợp âm
  *   data-go="chord|C|maj7", "scale|G|major", "prog", "fret|interval", "circle", "train|interval", "tools"
  */
 (function (global) {
@@ -14,6 +15,28 @@
   const seq = (v, l) => chip('data-seq', v, l);
   const chord = (v, l) => chip('data-chord', v, l);
   const go = (v, l) => `<button type="button" class="lgo" data-go="${v}">${l}</button>`;
+  const sym = (r, t) => T.chordSymbol(T.parseNote(r), t);
+  const ch = (r, t) => chord(r + ':' + t, sym(r, t));
+  /** Nút phát cả vòng; nhãn tự ghi tên hợp âm. list = [['D','m7'], ['G','7'], ...] */
+  const prog = list => chip('data-prog', list.map(x => x.join(':')).join(','), '▶ ' + list.map(([r, t]) => sym(r, t)).join(' – '));
+  const notesOf = (r, t) => T.chordTones(T.parseNote(r), t).map(x => T.letterName(x.note)).join(' – ');
+  const formula = t => T.CHORD[t].iv.map(T.ivText).join(' – ');
+  /** Bảng hợp âm, mỗi dòng: [loại, cách dựng]. Nốt được tính tự động từ nốt gốc. */
+  const chordTable = (root, rows) => `<div class="table-wrap"><table class="ltable"><thead><tr><th>Ký hiệu</th><th>Công thức</th><th>Cách dựng nhanh</th><th>Từ ${root}</th><th></th></tr></thead><tbody>${
+    rows.map(([t, how]) => `<tr><td><strong>${sym(root, t)}</strong></td><td>${formula(t)}</td><td>${how}</td><td>${notesOf(root, t)}</td><td>${ch(root, t)}</td></tr>`).join('')
+  }</tbody></table></div>`;
+
+  // Bậc trong hợp âm so với âm giai trưởng của nốt gốc (ví dụ từ C)
+  const degreeRows = [
+    ['1', 0, 'Nốt gốc'], ['♭2 / ♭9', 1, ''], ['2 / 9', 2, '9 = nốt 2 cao lên một quãng 8'], ['♯2 / ♯9', 3, 'cùng phím với ♭3'],
+    ['♭3', 3, 'quãng 3 thứ: hợp âm thứ'], ['3', 4, 'quãng 3 trưởng: hợp âm trưởng'], ['4 / 11', 5, '11 = nốt 4 cao lên một quãng 8'],
+    ['♯4 / ♯11', 6, ''], ['♭5', 6, 'hợp âm giảm, nửa giảm'], ['5', 7, 'quãng 5 đúng'], ['♯5', 8, 'hợp âm tăng'],
+    ['♭6 / ♭13', 8, ''], ['6 / 13', 9, '13 = nốt 6 cao lên một quãng 8'], ['♭♭7', 9, 'chỉ có trong hợp âm dim7'],
+    ['♭7', 10, 'quãng 7 thứ: thấp hơn nốt gốc một cung'], ['7', 11, 'quãng 7 trưởng: thấp hơn nốt gốc nửa cung']
+  ].map(([d, n, note]) => {
+    const ivx = d.split(' / ')[0].replace('♭♭', 'bb').replace('♭', 'b').replace('♯', '#');
+    return `<tr><td><strong>${d}</strong></td><td>${n}</td><td>${T.letterName(T.transpose(T.parseNote('C'), ivx))}</td><td>${note}</td></tr>`;
+  }).join('');
 
   const intervalRows = T.SEMI_IV.map((s, i) => {
     const top = s === '8' ? 'C' : T.letterName(T.transpose(T.parseNote('C'), s));
@@ -71,6 +94,146 @@
 <p>Khi viết vòng hợp âm bằng số (ví dụ 1 – 5 – 6 – 4), đổi sang giọng khác chỉ cần thay chủ âm. Nhạc công gọi cách ghi này là hệ số Nashville.</p>
 <p>${chord('C:maj', 'I')} ${chord('G:maj', 'V')} ${chord('A:min', 'vi')} ${chord('F:maj', 'IV')}</p>
 <p>${go('prog', 'Dựng vòng hợp âm')}</p>`
+    },
+    {
+      id: 'color', title: 'Hợp âm màu: đọc công thức theo âm giai trưởng',
+      html: `
+<p><strong>Hợp âm màu</strong> là hợp âm có thêm nốt ngoài bộ ba 1 – 3 – 5: nốt 7, 6, 9, 11, 13, hoặc thay nốt 3 bằng 2/4 (sus). Những nốt thêm vào này làm hợp âm “có màu”: mơ màng, chill, căng, sang… thay vì chỉ vui (trưởng) hay buồn (thứ).</p>
+<p>Mọi con số trong tên hợp âm đều được đo so với <strong>âm giai trưởng của nốt gốc</strong>. Dấu ♭ nghĩa là hạ nốt đó nửa cung so với âm giai trưởng, dấu ♯ là nâng nửa cung. Số lớn hơn 7 chỉ là nốt cũ ở quãng 8 cao hơn: <strong>9 = 2, 11 = 4, 13 = 6</strong>.</p>
+<div class="table-wrap"><table class="ltable"><thead><tr><th>Bậc</th><th>Nửa cung từ gốc</th><th>Từ C</th><th>Ghi chú</th></tr></thead><tbody>${degreeRows}</tbody></table></div>
+<h4>Hai cách suy ra nốt thật nhanh</h4>
+<p><strong>Cách 1 — theo âm giai trưởng.</strong> Viết âm giai trưởng của nốt gốc, lấy các bậc theo công thức rồi chỉnh ♭/♯. Ví dụ Emaj7 = 1 – 3 – 5 – 7. Âm giai E trưởng: E F♯ G♯ A B C♯ D♯ → lấy bậc 1, 3, 5, 7 = <strong>E – G♯ – B – D♯</strong>. ${ch('E', 'maj7')}</p>
+<p><strong>Cách 2 — từ hợp âm ba bạn đã biết, cộng thêm một nốt theo “mốc”.</strong> Cách này nhanh hơn khi đã thuộc hợp âm ba:</p>
+<ul>
+<li><strong>7 trưởng</strong> (maj7): thấp hơn nốt gốc <em>nửa cung</em>. C → B, nên Cmaj7 = C E G + B.</li>
+<li><strong>♭7</strong> (7, m7): thấp hơn nốt gốc <em>một cung</em>. A → G, nên A7 = A C♯ E + G.</li>
+<li><strong>6</strong>: cao hơn nốt 5 <em>một cung</em>. G → A, nên C6 = C E G + A.</li>
+<li><strong>9</strong> (add9, 9): cao hơn nốt gốc <em>một cung</em>. D → E, nên Dadd9 = D F♯ A + E.</li>
+<li><strong>11</strong>: chính là nốt 4 (cao hơn gốc 5 nửa cung). <strong>13</strong>: chính là nốt 6.</li>
+</ul>
+<p>Viết tên nốt sao cho mỗi chữ cái “nhảy cách một”: 1 – 3 – 5 – 7 dùng các chữ cái cách quãng (C E G B, D F A C, E G B D). Vì thế B7 viết là B – D♯ – F♯ – A chứ không viết E♭ hay G♭, dù cùng phím. Trang này luôn ghi đúng tên nốt theo quy tắc đó.</p>
+<p>${go('train|build', 'Luyện dựng hợp âm có bấm giờ')} ${go('train|name', 'Luyện đọc tên hợp âm')}</p>`
+    },
+    {
+      id: 'sevenths', title: 'Hợp âm bảy: năm loại cần thuộc trước',
+      html: `
+<p>Hợp âm bảy = hợp âm ba + một quãng 3 nữa chồng lên trên. Chỉ cần thuộc 5 loại dưới đây là đọc được phần lớn bản nhạc pop, ballad, R&B và jazz cơ bản.</p>
+${chordTable('C', [
+  ['maj7', 'Hợp âm trưởng + 7 trưởng (nửa cung dưới gốc)'],
+  ['7', 'Hợp âm trưởng + ♭7 (một cung dưới gốc)'],
+  ['m7', 'Hợp âm thứ + ♭7'],
+  ['m7b5', 'Hợp âm giảm + ♭7'],
+  ['dim7', 'Hợp âm giảm + ♭♭7 (3 nửa cung dưới gốc)']
+])}
+<p><strong>Chuỗi “hạ từng nửa cung”</strong> — mẹo nhớ cả 5 loại cùng lúc: bắt đầu từ Cmaj7 rồi mỗi bước chỉ hạ <em>một</em> nốt xuống nửa cung.</p>
+<ul>
+<li>Cmaj7 (C E G <strong>B</strong>) → hạ 7 → C7 (C E G <strong>B♭</strong>)</li>
+<li>C7 (C <strong>E</strong> G B♭) → hạ 3 → Cm7 (C <strong>E♭</strong> G B♭)</li>
+<li>Cm7 (C E♭ <strong>G</strong> B♭) → hạ 5 → Cm7♭5 (C E♭ <strong>G♭</strong> B♭)</li>
+<li>Cm7♭5 (C E♭ G♭ <strong>B♭</strong>) → hạ 7 lần nữa → Cdim7 (C E♭ G♭ <strong>B♭♭</strong>)</li>
+</ul>
+<p>${prog([['C', 'maj7'], ['C', '7'], ['C', 'm7'], ['C', 'm7b5'], ['C', 'dim7']])}</p>
+<p>Ít gặp hơn nhưng nên biết: ${ch('C', 'mMaj7')} (thứ + 7 trưởng, màu nhạc phim), ${ch('C', '7sus4')} (sus4 + ♭7, mềm hơn C7), ${ch('C', 'maj7#5')}.</p>
+<h4>Hợp âm bảy thuận trong giọng trưởng</h4>
+<p>Chồng 4 nốt trên mỗi bậc của âm giai trưởng sẽ luôn được thứ tự: <strong>Imaj7 – iim7 – iiim7 – IVmaj7 – V7 – vim7 – viiø7</strong>. Trong Đô trưởng:</p>
+<p>${['C:maj7', 'D:m7', 'E:m7', 'F:maj7', 'G:7', 'A:m7', 'B:m7b5'].map(x => { const [r, t] = x.split(':'); return ch(r, t); }).join(' ')}</p>
+<p>Để ý: chỉ có <strong>một</strong> hợp âm 7 át (bậc V). Vì thế khi thấy G7 là biết ngay bài đang muốn về C (hoặc Cm).</p>
+<p>${go('chord|C|maj7', 'Xem thế bấm guitar và piano')} ${go('train|build', 'Luyện dựng hợp âm 7')}</p>`
+    },
+    {
+      id: 'addsus', title: 'Sus, 6, add9 và 6/9',
+      html: `
+${chordTable('C', [
+  ['sus2', 'Thay 3 bằng 2'],
+  ['sus4', 'Thay 3 bằng 4'],
+  ['6', 'Hợp âm trưởng + 6'],
+  ['m6', 'Hợp âm thứ + 6 trưởng'],
+  ['add9', 'Hợp âm trưởng + 9, không có 7'],
+  ['madd9', 'Hợp âm thứ + 9, không có 7'],
+  ['69', 'Hợp âm 6 + 9']
+])}
+<h4>Hay nhầm: sus2, add9 và 9</h4>
+<ul>
+<li><strong>Csus2</strong> = C D G: <em>không có</em> nốt 3, nên không trưởng không thứ, nghe trong và lơ lửng.</li>
+<li><strong>Cadd9</strong> = C E G D: vẫn là hợp âm trưởng (có E), chỉ thêm nốt 9 cho lấp lánh. <em>Không có</em> nốt 7.</li>
+<li><strong>C9</strong> = C E G B♭ D: tên “9” trơn nghĩa là đã có sẵn ♭7 bên dưới (C7 + 9). Nghe funk, blues.</li>
+</ul>
+<p>${ch('C', 'sus2')} ${ch('C', 'add9')} ${ch('C', '9')}</p>
+<h4>Sus giải quyết về hợp âm trưởng</h4>
+<p>Nốt 4 của sus4 muốn đi xuống nốt 3, nốt 2 của sus2 muốn đi lên nốt 3. Kiểu Dsus4 → D hoặc G7sus4 → G7 có trong rất nhiều bài pop và ballad. ${prog([['D', 'sus4'], ['D', 'maj'], ['D', 'sus2'], ['D', 'maj']])} ${prog([['G', '7sus4'], ['G', '7'], ['C', 'maj']])}</p>
+<h4>Một bộ nốt, hai cái tên</h4>
+<p>C6 = C E G A và Am7 = A C E G có <strong>cùng bốn nốt</strong>. Gọi tên nào tùy nốt bass và vai trò trong bài: bass là C thì gọi C6, bass là A thì gọi Am7. Tương tự, Cm6 (C E♭ G A) cùng nốt với Am7♭5 (A C E♭ G).</p>
+<p>Trên guitar, <strong>Cadd9</strong> mở (x32030) và <strong>Gadd9/G6</strong> là những thế bấm “ăn tiền” nhất cho ballad: chỉ cần giữ ngón 3, 4 ở dây 1–2 khi đổi qua lại giữa G, Cadd9, Em7, Dsus4.</p>
+<p>${go('chord|C|add9', 'Xem thế bấm Cadd9')}</p>`
+    },
+    {
+      id: 'ext', title: 'Hợp âm mở rộng 9, 11, 13 và hợp âm biến',
+      html: `
+<p>Tiếp tục chồng quãng 3 lên trên hợp âm bảy sẽ được nốt 9, rồi 11, rồi 13. Quy ước quan trọng: <strong>số lớn nhất trong tên ngụ ý đã có đủ các nốt 7 (và thường là 9) bên dưới</strong>.</p>
+${chordTable('C', [
+  ['9', 'C7 + 9'],
+  ['maj9', 'Cmaj7 + 9'],
+  ['m9', 'Cm7 + 9'],
+  ['11', 'C9 + 11 (thường bỏ nốt 3)'],
+  ['m11', 'Cm9 + 11'],
+  ['13', 'C9 + 13 (thường bỏ 5, 9)']
+])}
+<h4>Lược bớt nốt khi bấm</h4>
+<p>Guitar chỉ có 6 dây và tay chỉ có 4 ngón, nên hợp âm 5–6 nốt luôn bị lược bớt. Thứ tự bỏ:</p>
+<ol>
+<li><strong>Nốt 5</strong> bỏ đầu tiên: nó không quyết định màu sắc (trừ khi là ♭5 hoặc ♯5).</li>
+<li><strong>Nốt gốc</strong> có thể bỏ khi đã có bass hoặc người khác chơi nốt gốc.</li>
+<li><strong>Nốt 3 và 7 phải giữ</strong>: hai nốt này (gọi là “nốt dẫn”, guide tones) cho biết hợp âm là trưởng, thứ hay át.</li>
+<li>Với hợp âm 11 trưởng/át, nốt 11 (F) va với nốt 3 (E) ở quãng 9 thứ nên người ta bỏ nốt 3: C11 nghe gần như B♭/C hoặc C9sus4.</li>
+</ol>
+<h4>Hợp âm biến (altered)</h4>
+<p>Trên hợp âm 7 át, nốt 9 có thể bị hạ (♭9) hoặc nâng (♯9) để tăng độ căng trước khi về chủ âm:</p>
+<ul>
+<li>${ch('E', '7b9')} = ${notesOf('E', '7b9')}: rất tối, kéo mạnh về hợp âm thứ (E7♭9 → Am).</li>
+<li>${ch('E', '7#9')} = ${notesOf('E', '7#9')}; nốt ♯9 (F♯♯) cùng phím với G, nên nghe như có cả G♯ lẫn G: “hợp âm Hendrix”, vừa trưởng vừa thứ, chất rock và funk.</li>
+</ul>
+<p>${prog([['E', '7b9'], ['A', 'min']])} ${prog([['E', '7#9'], ['E', '7#9'], ['A', '7'], ['E', '7#9']])}</p>
+<p>${go('chord|C|9', 'Xem thế bấm C9')} ${go('train|build', 'Luyện hợp âm mở rộng')}</p>`
+    },
+    {
+      id: 'coloruse', title: 'Thêm màu cho vòng hợp âm',
+      html: `
+<p>Cách đơn giản nhất: giữ nguyên vòng hợp âm cũ, thay mỗi hợp âm ba bằng một phiên bản có màu <strong>mà nốt thêm vào vẫn nằm trong âm giai</strong> của bài. Bảng cho Đô trưởng:</p>
+<div class="table-wrap"><table class="ltable"><thead><tr><th>Bậc</th><th>Hợp âm ba</th><th>Có thể thay bằng</th></tr></thead><tbody>
+<tr><td>I</td><td>C</td><td>${ch('C', 'maj7')} ${ch('C', 'add9')} ${ch('C', '6')} ${ch('C', 'maj9')} ${ch('C', '69')}</td></tr>
+<tr><td>ii</td><td>Dm</td><td>${ch('D', 'm7')} ${ch('D', 'm9')} ${ch('D', 'm11')}</td></tr>
+<tr><td>iii</td><td>Em</td><td>${ch('E', 'm7')}</td></tr>
+<tr><td>IV</td><td>F</td><td>${ch('F', 'maj7')} ${ch('F', 'add9')} ${ch('F', '6')} ${ch('F', 'maj9')}</td></tr>
+<tr><td>V</td><td>G</td><td>${ch('G', '7')} ${ch('G', '7sus4')} ${ch('G', '9')} ${ch('G', '13')}</td></tr>
+<tr><td>vi</td><td>Am</td><td>${ch('A', 'm7')} ${ch('A', 'm9')} ${ch('A', 'madd9')}</td></tr>
+<tr><td>vii°</td><td>Bdim</td><td>${ch('B', 'm7b5')}</td></tr>
+</tbody></table></div>
+<p>Ví dụ vì sao <em>không</em> có Em9 trong bảng: Em9 cần F♯, mà F♯ không thuộc Đô trưởng nên sẽ nghe lạc. Tương tự, đừng biến bậc V thành Gmaj7 (cần F♯) hay bậc I thành C7 (cần B♭) — trừ khi bạn cố ý muốn rời giọng.</p>
+<h4>Các vòng màu nên thuộc</h4>
+<ul>
+<li><strong>ii – V – I</strong>, xương sống của jazz và R&B: ${prog([['D', 'm7'], ['G', '7'], ['C', 'maj7']])}</li>
+<li><strong>ii – V – i giọng thứ</strong>: ${prog([['B', 'm7b5'], ['E', '7b9'], ['A', 'm7']])}</li>
+<li><strong>1 – 6 – 4 – 5 bản có màu</strong>: ${prog([['C', 'add9'], ['A', 'm7'], ['F', 'maj7'], ['G', '7sus4'], ['G', '7']])}</li>
+<li><strong>4 – 5 – 3 – 6</strong> (rất quen trong pop Á Đông): ${prog([['F', 'maj7'], ['G', '7'], ['E', 'm7'], ['A', 'm7']])}</li>
+<li><strong>Neo-soul / lo-fi</strong>: ${prog([['F', 'maj9'], ['E', 'm7'], ['D', 'm9'], ['C', 'maj9']])}</li>
+</ul>
+<p>Trong trang Vòng hợp âm, ở mục Hợp âm thuận chọn “Hợp âm bảy” để mọi hợp âm thuận tự thêm nốt 7, rồi thử đổi từng hợp âm sang add9, sus4, 9… để nghe khác biệt.</p>
+<p>${go('prog', 'Mở trang Vòng hợp âm')}</p>`
+    },
+    {
+      id: 'drill', title: 'Cách luyện để suy hợp âm thật nhanh',
+      html: `
+<p>Biết công thức chưa đủ: mục tiêu là <strong>nhìn tên là thấy nốt</strong>, không phải đếm nửa cung. Lộ trình gợi ý, mỗi ngày 10–15 phút với bài <em>Dựng hợp âm</em> (có bấm giờ):</p>
+<ol>
+<li><strong>Hợp âm trưởng và thứ, nốt gốc tự nhiên.</strong> Mục tiêu: dưới 3 giây mỗi hợp âm, đúng trên 95%. Mẹo: thuộc lòng 7 hợp âm trưởng C, D, E, F, G, A, B như thuộc bảng cửu chương; hợp âm thứ chỉ là hạ nốt giữa.</li>
+<li><strong>Thêm giảm, tăng, sus.</strong> Luôn suy từ hợp âm trưởng: đổi đúng một nốt.</li>
+<li><strong>Bật “Cả thăng/giáng”.</strong> Mẹo: B♭ trưởng chỉ là B trưởng (B D♯ F♯) hạ cả ba nốt xuống nửa cung → B♭ D F. Áp dụng được cho mọi nốt gốc có dấu.</li>
+<li><strong>Hợp âm 7.</strong> Mục tiêu dưới 5 giây. Dùng mốc: maj7 = nửa cung dưới gốc, ♭7 = một cung dưới gốc.</li>
+<li><strong>Sáu & thêm, rồi mở rộng 9–13.</strong> Mốc: 9 = một cung trên gốc, 6/13 = một cung trên nốt 5, 11 = nốt 4.</li>
+<li><strong>Đảo chiều với bài <em>Đọc tên hợp âm</em></strong>, rồi bật “Xáo thứ tự các nốt”. Mẹo tìm nốt gốc: xếp lại các nốt sao cho cách nhau quãng 3 — nốt dưới cùng chính là nốt gốc.</li>
+</ol>
+<p>Luyện thêm ngoài máy: đọc to hợp âm theo vòng quãng 4 (C – F – B♭ – E♭ – A♭ – D♭ – G♭ – B – E – A – D – G), mỗi hợp âm đọc 4 nốt, giữ nhịp với metronome ở 60 BPM rồi tăng dần.</p>
+<p>${go('train|build', 'Bắt đầu Dựng hợp âm')} ${go('train|name', 'Đọc tên hợp âm')} ${go('tools', 'Mở metronome')}</p>`
     },
     {
       id: 'capo', title: 'Capo và chuyển giọng',
@@ -146,6 +309,18 @@
         ['g9', 'Hợp âm maj7, m7, add9 cho ballad'],
         ['g10', 'Đệm hát trọn vẹn một bài, có dùng capo'],
         ['g11', 'Nghe phân biệt hợp âm trưởng/thứ đúng trên 90%']
+      ]
+    },
+    {
+      id: 'color', title: 'Hợp âm màu', items: [
+        ['c1', 'Dựng hợp âm trưởng/thứ từ nốt gốc tự nhiên dưới 3 giây'],
+        ['c2', 'Dựng hợp âm trưởng/thứ từ mọi nốt gốc (cả thăng/giáng)'],
+        ['c3', 'Thuộc 5 loại hợp âm 7: maj7, 7, m7, m7♭5, dim7'],
+        ['c4', 'Phân biệt sus2, add9 và 9; 6 và m7'],
+        ['c5', 'Dựng hợp âm 9, 11, 13 và biết bỏ nốt nào khi bấm'],
+        ['c6', 'Viết 7 hợp âm bảy thuận của một giọng trưởng bất kỳ'],
+        ['c7', 'Chơi ii – V – I ở 3 giọng khác nhau'],
+        ['c8', 'Thêm màu cho một vòng hợp âm quen thuộc mà không bị lạc giọng']
       ]
     },
     {

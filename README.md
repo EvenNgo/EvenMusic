@@ -10,9 +10,9 @@ Web học nhạc lý cho người chơi guitar, piano và làm nhạc trên FL S
 - **Nhận diện hợp âm**: bấm nốt trên piano hoặc cần đàn, trang cho biết đó là hợp âm gì.
 - **Vòng quãng 5** tương tác.
 - **Bản đồ cần đàn**: tất cả nốt, nốt tự nhiên, tìm một nốt, bản đồ quãng.
-- **Luyện tập**: nghe quãng, nghe loại hợp âm, đố nốt trên cần đàn, nhạc lý nhanh, có thống kê điểm.
+- **Luyện tập**: dựng hợp âm (bấm đủ các nốt của một hợp âm, có bấm giờ, thời gian trung bình và nhanh nhất), đọc tên hợp âm từ các nốt, nghe quãng, nghe loại hợp âm, đố nốt trên cần đàn, nhạc lý nhanh, có thống kê điểm.
 - **Metronome** (gõ để đo tempo, chia nhỏ phách, tự tăng tốc) và **tuner** dùng micro.
-- **Bài học và lộ trình** cho guitar, piano, FL Studio và sáng tác.
+- **Bài học và lộ trình** cho guitar, piano, FL Studio và sáng tác, kèm một chuỗi bài về hợp âm màu: đọc công thức, hợp âm 7, sus/6/add9, hợp âm mở rộng 9–13 và hợp âm biến, cách thêm màu cho vòng hợp âm, cách luyện để suy hợp âm nhanh.
 - **Cài đặt**: tên nốt C D E hoặc Đô Rê Mi, 8 cách lên dây (kể cả ukulele và bass), số phím, cần đàn cho người thuận tay trái, giao diện sáng/tối.
 
 ## Chạy thử trên máy
@@ -55,7 +55,7 @@ index.html          khung giao diện của các trang
 css/style.css       màu sắc, bố cục, giao diện sáng/tối
 fonts/              hai ký tự ♯ ♭ (cắt từ font Arimo)
 js/theory.js        lõi nhạc lý: nốt, quãng, hợp âm, âm giai, thế bấm, nhận diện hợp âm
-js/audio.js         âm thanh Web Audio: guitar, piano, metronome, tuner
+js/audio.js         âm thanh Web Audio: guitar, piano, hồi âm, metronome, tuner
 js/render.js        vẽ SVG: cần đàn, sơ đồ thế bấm, piano, vòng quãng 5, piano roll
 js/midi.js          ghi file MIDI
 js/lessons.js       nội dung bài học và lộ trình

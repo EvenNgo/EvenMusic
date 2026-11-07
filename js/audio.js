@@ -1,6 +1,7 @@
 /* Phím & Phím — js/audio.js
  * Âm thanh bằng Web Audio API, không cần file mẫu:
- *  - Guitar: tổng hợp Karplus–Strong (dây gảy)
+ *  - Guitar: tổng hợp Karplus–Strong (dây gảy), kích thích mềm và lọc dải cao cho tiếng ấm
+ *  - Hồi âm nhẹ dùng chung cho guitar và piano
  *  - Piano: tổng hợp cộng (additive) với đường bao tắt dần
  *  - Metronome có bộ hẹn giờ nhìn trước (lookahead) để giữ nhịp chính xác
  *  - Tuner dùng micro, dò cao độ bằng hàm tự tương quan chuẩn hóa (NSDF)
@@ -30,25 +31,62 @@
       A.master.connect(A.comp);
       A.comp.connect(ctx.destination);
 
-      // Bus guitar: cắt bớt tiếng rè ở dải cao, thêm chút “thân đàn” ở dải trầm-trung
+      // Hồi âm nhẹ (đáp ứng xung tự tạo) giúp tiếng đàn tròn và bớt khô, bớt chói
+      A.verb = ctx.createConvolver();
+      A.verb.buffer = impulse(ctx, 1.8, 3.2);
+      const wet = ctx.createGain();
+      wet.gain.value = 0.22;
+      A.verb.connect(wet);
+      wet.connect(A.master);
+
+      // Bus guitar: cắt mạnh dải cao (nguyên nhân gây chói), hạ dải 2–4 kHz, thêm “thân đàn” ở dải trầm-trung
       A.guitarBus = ctx.createBiquadFilter();
       A.guitarBus.type = 'lowpass';
-      A.guitarBus.frequency.value = 5200;
+      A.guitarBus.frequency.value = 3600;
+      A.guitarBus.Q.value = 0.5;
+      const shelf = ctx.createBiquadFilter();
+      shelf.type = 'highshelf';
+      shelf.frequency.value = 2400;
+      shelf.gain.value = -5;
       const body = ctx.createBiquadFilter();
       body.type = 'peaking';
-      body.frequency.value = 180;
-      body.gain.value = 3;
-      body.Q.value = 0.9;
-      A.guitarBus.connect(body);
-      body.connect(A.master);
+      body.frequency.value = 200;
+      body.gain.value = 3.5;
+      body.Q.value = 0.8;
+      const lowCut = ctx.createBiquadFilter();
+      lowCut.type = 'highpass';
+      lowCut.frequency.value = 70;
+      A.guitarBus.connect(shelf);
+      shelf.connect(body);
+      body.connect(lowCut);
+      lowCut.connect(A.master);
+      lowCut.connect(A.verb);
 
       A.pianoBus = ctx.createGain();
       A.pianoBus.connect(A.master);
+      A.pianoBus.connect(A.verb);
       A.clickBus = ctx.createGain();
       A.clickBus.connect(A.master);
     }
     if (A.ctx.state === 'suspended') A.ctx.resume();
     return A.ctx;
+  }
+
+  /** Đáp ứng xung stereo: nhiễu tắt dần, càng về sau càng tối. */
+  function impulse(ctx, seconds, decay) {
+    const sr = ctx.sampleRate, len = Math.floor(sr * seconds);
+    const buf = ctx.createBuffer(2, len, sr);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = buf.getChannelData(ch);
+      let lp = 0;
+      for (let i = 0; i < len; i++) {
+        const t = i / len;
+        const k = 0.5 - 0.42 * t; // hệ số lọc giảm dần → đuôi hồi âm tối dần
+        lp += k * ((Math.random() * 2 - 1) - lp);
+        d[i] = lp * Math.pow(1 - t, decay);
+      }
+    }
+    return buf;
   }
 
   function now() { return ensure() ? A.ctx.currentTime : 0; }
@@ -77,33 +115,45 @@
     if (ksCache.has(m)) return ksCache.get(m);
     const ctx = A.ctx, sr = ctx.sampleRate;
     const f = hz(m);
-    const N = Math.max(2, Math.floor(sr / f));
+    // Bộ lọc vòng 3 điểm có độ trễ 1 mẫu → chu kỳ thực là N + 1 mẫu
+    const N = Math.max(4, Math.round(sr / f - 1));
     const len = Math.floor(sr * 3.2);
     const buf = ctx.createBuffer(1, len, sr);
     const out = buf.getChannelData(0);
     const ring = new Float32Array(N);
-    let prev = 0, mean = 0;
+    // Kích thích: nhiễu qua hai tầng lọc thấp → tiếng gảy mềm như đầu ngón tay, không rít như móng/pick cứng
+    let p1 = 0, p2 = 0;
     for (let i = 0; i < N; i++) {
-      prev = prev * 0.4 + (Math.random() * 2 - 1) * 0.6; // nhiễu đã lọc nhẹ → tiếng gảy ấm hơn
-      ring[i] = prev;
-      mean += prev;
+      p1 += 0.55 * ((Math.random() * 2 - 1) - p1);
+      p2 += 0.55 * (p1 - p2);
+      ring[i] = p2;
     }
+    // Vị trí gảy (~1/7 dây, gần lỗ thoát âm): bộ lọc răng lược làm bớt các họa âm chói
+    const P = Math.max(1, Math.round(N * 0.14));
+    const exc = ring.slice();
+    for (let i = 0; i < N; i++) ring[i] = exc[i] - 0.9 * exc[(i - P + N) % N];
+    let mean = 0, peak = 0;
+    for (let i = 0; i < N; i++) mean += ring[i];
     mean /= N;
-    for (let i = 0; i < N; i++) ring[i] -= mean;
-    const halfLife = Math.max(0.35, Math.min(1.6, 1.6 - (m - 40) * 0.025));
+    for (let i = 0; i < N; i++) { ring[i] -= mean; peak = Math.max(peak, Math.abs(ring[i])); }
+    const norm = peak > 0 ? 0.9 / peak : 1;
+    for (let i = 0; i < N; i++) ring[i] *= norm;
+    const halfLife = Math.max(0.5, Math.min(2.2, 2.2 - (m - 40) * 0.03));
     const decay = Math.pow(0.5, 1 / (f * halfLife));
     let idx = 0;
     for (let i = 0; i < len; i++) {
-      const nxt = idx + 1 === N ? 0 : idx + 1;
+      const n1 = idx + 1 === N ? 0 : idx + 1;
+      const n2 = n1 + 1 === N ? 0 : n1 + 1;
       const cur = ring[idx];
       out[i] = cur;
-      ring[idx] = decay * 0.5 * (cur + ring[nxt]);
-      idx = nxt;
+      // Lọc 3 điểm (0.25, 0.5, 0.25) làm dải cao tắt nhanh hơn dải trầm, như dây đàn thật
+      ring[idx] = decay * (0.25 * cur + 0.5 * ring[n1] + 0.25 * ring[n2]);
+      idx = n1;
     }
     const fade = Math.floor(sr * 0.08);
     for (let i = 0; i < fade; i++) out[len - 1 - i] *= i / fade;
-    // Chu kỳ thực của vòng trễ là N + 0.5 mẫu → chỉnh tốc độ phát để đúng cao độ.
-    const entry = { buf, rate: f * (N + 0.5) / sr };
+    // Chỉnh tốc độ phát để đúng cao độ (vì N phải là số nguyên).
+    const entry = { buf, rate: f * (N + 1) / sr };
     ksCache.set(m, entry);
     return entry;
   }
@@ -116,7 +166,8 @@
     src.playbackRate.value = rate;
     const g = ctx.createGain();
     const end = when + dur;
-    g.gain.setValueAtTime(vel, when);
+    g.gain.setValueAtTime(0, when);
+    g.gain.linearRampToValueAtTime(vel, when + 0.004); // bỏ tiếng “tách” ở đầu nốt
     g.gain.setValueAtTime(vel, end);
     g.gain.setTargetAtTime(0, end, 0.06);
     src.connect(g);
