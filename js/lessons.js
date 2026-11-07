@@ -26,6 +26,13 @@
     rows.map(([t, how]) => `<tr><td><strong>${sym(root, t)}</strong></td><td>${formula(t)}</td><td>${how}</td><td>${notesOf(root, t)}</td><td>${ch(root, t)}</td></tr>`).join('')
   }</tbody></table></div>`;
 
+  /** Lưới trống 16 bước. rows = [[tên, 'x000…']]; x = đánh, r = roll, 0 = nghỉ. */
+  const grid = rows => `<div class="table-wrap"><table class="ltable drumgrid"><thead><tr><th></th>${
+    ['1', 'e', '&', 'a', '2', 'e', '&', 'a', '3', 'e', '&', 'a', '4', 'e', '&', 'a'].map((c, i) => `<th class="${i % 4 ? '' : 'beat'}">${c}</th>`).join('')
+  }</tr></thead><tbody>${
+    rows.map(([name, pat]) => `<tr><td><strong>${name}</strong></td>${[...pat].map((c, i) => `<td class="${i % 4 ? '' : 'beat'}">${c === 'x' ? '●' : c === 'r' ? '≡' : '·'}</td>`).join('')}</tr>`).join('')
+  }</tbody></table></div>`;
+
   // Bậc trong hợp âm so với âm giai trưởng của nốt gốc (ví dụ từ C)
   const degreeRows = [
     ['1', 0, 'Nốt gốc'], ['♭2 / ♭9', 1, ''], ['2 / 9', 2, '9 = nốt 2 cao lên một quãng 8'], ['♯2 / ♯9', 3, 'cùng phím với ♭3'],
@@ -399,6 +406,68 @@ ${chordTable('C', [
 <h4>Về bản quyền</h4>
 <p>Remake để tự học trên máy của bạn thì thoải mái. Nếu muốn đăng lên mạng, hãy ghi rõ tên bài, tác giả và ca sĩ gốc, và tìm hiểu quy định bản quyền của nền tảng (YouTube, TikTok, Spotify…): bài có thể bị chặn, tắt tiếng, hoặc doanh thu chuyển cho chủ sở hữu bài gốc. Phát hành có thu tiền thì cần xin phép hoặc mua giấy phép cover từ người giữ bản quyền.</p>
 <p>Remake được 2–3 bài, bạn sẽ thấy các “công thức” lặp lại: cách xếp đoạn, cách dồn trước điệp khúc, cách chọn tiếng. Đó là lúc chuyển sang viết bài của riêng mình (xem bài “Từ vòng hợp âm đến một bài hát”).</p>`
+    },
+    {
+      id: 'rnb', title: 'Remake R&B và hip-hop (trap, melodic rap)',
+      html: `
+<p>R&B và hip-hop Việt hiện nay (kiểu HIEUTHUHAI, MCK, tlinh, Wren Evans…) thường là <strong>melodic rap / R&B pop</strong>: beat trap hoặc R&B chậm, 808 làm bass, hợp âm có màu (m7, m9, maj7), giọng rap có giai điệu, nhiều lớp bè và ad-lib. Phần sản xuất thường gọn hơn pop nhiều lớp, nên rất hợp để remake.</p>
+<h4>Gợi ý bài để remake (tự đo tempo và dò hợp âm bằng tai)</h4>
+<ul>
+<li><strong>HIEUTHUHAI – Không Thể Say</strong>, <strong>Exit Sign</strong>, <strong>Ngủ Một Mình</strong>: học cách beat để nhiều khoảng trống cho giọng, cách xếp bè và ad-lib, cách 808 đi cùng kick.</li>
+<li><strong>MCK – Chìm Sâu</strong>: R&B chậm, hợp âm màu, không gian rộng (reverb, delay).</li>
+<li><strong>tlinh – Nếu Lúc Đó</strong>: R&B ballad, giọng hát là trung tâm, phối tối giản.</li>
+<li><strong>Wren Evans – Thích Em Hơi Nhiều</strong>: R&B pop vui hơn, bass và trống có groove.</li>
+</ul>
+<p>Thứ tự nên làm: bắt đầu với một bài R&B chậm, ít lớp (để tập hợp âm màu và không gian), rồi mới đến bài trap có 808 và hi-hat phức tạp.</p>
+
+<h4>Tempo và cảm giác nhịp</h4>
+<ul>
+<li><strong>Trap</strong>: thường đặt 130–160 BPM nhưng snare/clap chỉ đánh ở phách 3, nên nghe như 65–80 BPM (gọi là <em>half-time</em>). Hi-hat chạy nhanh tạo cảm giác gấp.</li>
+<li><strong>R&B chậm</strong>: khoảng 60–90 BPM, snare ở phách 2 và 4, thường có <strong>swing</strong> nhẹ (nốt móc kép không đều nhau).</li>
+<li><strong>Boom bap</strong> (hip-hop cổ điển): khoảng 85–95 BPM, snare 2 và 4, swing rõ.</li>
+</ul>
+<p>Khi đo tempo một bài trap, nếu gõ theo snare ra khoảng 70 BPM thì nhân đôi lên (khoảng 140) để lưới trong FL Studio khớp với hi-hat.</p>
+
+<h4>Trống: ba mẫu cơ bản (mỗi ô là một nốt móc kép)</h4>
+<p><strong>Trap (half-time)</strong>, ô nhịp 16 bước, “≡” là hi-hat roll (chia 32 hoặc chùm ba):</p>
+${grid([['Kick', 'x000000000x00000'], ['Clap / snare', '00000000x0000000'], ['Hi-hat', 'x0x0x0x0x0x0xrrr']])}
+<p><strong>R&B chậm</strong>:</p>
+${grid([['Kick', 'x000000x00x00000'], ['Snare', '0000x0000000x000'], ['Hi-hat', 'x0x0x0xxx0x0x0xx']])}
+<p><strong>Boom bap</strong> (thêm swing 55–60%):</p>
+${grid([['Kick', 'x000000x00x00000'], ['Snare', '0000x0000000x000'], ['Hi-hat', 'x0x0x0x0x0x0x0x0']])}
+<p>Mẹo cho beat “sống” hơn: đổi velocity từng hi-hat (mạnh–nhẹ xen kẽ), thêm roll ở cuối câu 4 ô nhịp, bỏ kick hoặc toàn bộ trống một nhịp trước điệp khúc, thêm tiếng open hat hoặc percussion nhỏ ở cuối ô nhịp.</p>
+
+<h4>808: bass của hip-hop</h4>
+<ul>
+<li>808 là tiếng kick kéo dài có cao độ, đóng vai trò bass. <strong>Phải chỉnh cho đúng nốt</strong>: thường chơi nốt gốc của hợp âm đang vang, giống phần dò bass ở bài Remake 2.</li>
+<li>Bật chế độ mono và <strong>glide/portamento</strong> để 808 trượt từ nốt này sang nốt kia, kiểu rất đặc trưng của trap.</li>
+<li>Kick và 808 hay “đánh nhau” ở dải trầm: dùng kick ngắn, hoặc sidechain 808 theo kick, hoặc đặt 808 bắt đầu ngay sau kick.</li>
+<li>Nghe 808 trên tai nghe và trên loa điện thoại: loa điện thoại gần như không phát được dải trầm sâu, nên thêm chút méo nhẹ (saturation) để 808 vẫn nghe thấy.</li>
+</ul>
+
+<h4>Hợp âm: nơi dùng đến hợp âm màu</h4>
+<p>R&B gần như không dùng hợp âm ba trơn. Hợp âm thường là m7, m9, maj7, maj9, 9, 13, chơi bằng Rhodes, piano điện, pad hoặc guitar điện tiếng sạch. Bấm nghe thử:</p>
+<ul>
+<li>Vòng “Just the Two of Us”, rất hay gặp trong R&B: ${prog([['F', 'maj7'], ['E', '7'], ['A', 'm7'], ['G', 'm7'], ['C', '7']])}</li>
+<li>ii – V – I kiểu neo-soul: ${prog([['D', 'm9'], ['G', '13'], ['C', 'maj9']])}</li>
+<li>4 – 3 – 6 có màu: ${prog([['F', 'maj9'], ['E', 'm7'], ['A', 'm9']])}</li>
+<li>Hai hợp âm lặp, chất R&B chậm: ${prog([['A', 'm9'], ['D', 'm9'], ['A', 'm9'], ['D', 'm9']])}</li>
+<li>Trap tối, giọng thứ: ${prog([['C', 'min'], ['Ab', 'maj'], ['Bb', 'maj'], ['C', 'min']])}</li>
+</ul>
+<p>Mẹo: beat trap thường chỉ có 2–4 hợp âm lặp suốt bài; sự khác biệt giữa các đoạn nằm ở trống, 808 và lớp tiếng thêm bớt, không phải ở hợp âm.</p>
+
+<h4>Giọng rap và bè</h4>
+<ul>
+<li><strong>Giọng chính</strong> ở giữa, rõ và gần. Thường có chỉnh cao độ (auto-tune) ở mức nhẹ hoặc rõ tùy phong cách melodic rap.</li>
+<li><strong>Double</strong>: thu lại cùng câu một lần nữa, đặt nhỏ hơn hoặc mở hai bên, chỉ ở những từ cần nhấn.</li>
+<li><strong>Ad-lib</strong>: tiếng hô, từ ngắn chen vào khoảng trống giữa các câu, thường có delay hoặc reverb nhiều hơn và đặt lệch sang một bên.</li>
+<li><strong>Bè</strong> ở điệp khúc: hát quãng 3 trên hoặc dưới giai điệu chính, nhỏ hơn giọng chính.</li>
+</ul>
+<p>Nếu chưa thu giọng, có thể dùng một tiếng lead (pluck, piano, synth) chơi giai điệu điệp khúc để bản remake vẫn có “hook”.</p>
+
+<h4>Lớp không khí</h4>
+<p>R&B/lo-fi hay có các lớp tạo không khí: tiếng nhiễu đĩa than, tiếng mưa, vocal chop (cắt một mẩu giọng rồi chơi theo cao độ), pad mờ. Đặt các lớp này rất nhỏ: người nghe cảm thấy nhiều hơn là nghe thấy rõ.</p>
+<p>${go('chord|A|m9', 'Xem thế bấm Am9')} ${go('prog', 'Dựng vòng R&B và tải MIDI')} ${go('train|build', 'Luyện dựng hợp âm m9, maj9, 13')}</p>`
     }
   ];
 
@@ -452,7 +521,9 @@ ${chordTable('C', [
         ['r7', 'Dựng trống, bass, hợp âm trong FL Studio theo marker'],
         ['r8', 'Thêm lớp phụ và hiệu ứng chuyển đoạn'],
         ['r9', 'Cân âm lượng và so sánh với bản gốc ở cùng độ lớn'],
-        ['r10', 'Xuất bài, nghỉ một ngày, sửa 3 chỗ, cho người khác nghe']
+        ['r10', 'Xuất bài, nghỉ một ngày, sửa 3 chỗ, cho người khác nghe'],
+        ['r11', 'Remake một beat R&B chậm có hợp âm m9/maj9'],
+        ['r12', 'Remake một beat trap: 808 đúng nốt, có glide, hi-hat roll']
       ]
     },
     {
