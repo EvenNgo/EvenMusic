@@ -42,12 +42,12 @@
       // Bus guitar: cắt mạnh dải cao (nguyên nhân gây chói), hạ dải 2–4 kHz, thêm “thân đàn” ở dải trầm-trung
       A.guitarBus = ctx.createBiquadFilter();
       A.guitarBus.type = 'lowpass';
-      A.guitarBus.frequency.value = 3600;
+      A.guitarBus.frequency.value = 3000;
       A.guitarBus.Q.value = 0.5;
       const shelf = ctx.createBiquadFilter();
       shelf.type = 'highshelf';
-      shelf.frequency.value = 2400;
-      shelf.gain.value = -5;
+      shelf.frequency.value = 1800;
+      shelf.gain.value = -6;
       const body = ctx.createBiquadFilter();
       body.type = 'peaking';
       body.frequency.value = 200;
@@ -115,8 +115,9 @@
     if (ksCache.has(m)) return ksCache.get(m);
     const ctx = A.ctx, sr = ctx.sampleRate;
     const f = hz(m);
-    // Bộ lọc vòng 3 điểm có độ trễ 1 mẫu → chu kỳ thực là N + 1 mẫu
-    const N = Math.max(4, Math.round(sr / f - 1));
+    // Giá trị mới ở ô idx lấy trung bình các mẫu t..t+4 (tâm t+2) và được đọc lại sau N mẫu
+    // → chu kỳ thực là N − 2 mẫu.
+    const N = Math.max(8, Math.round(sr / f + 2));
     const len = Math.floor(sr * 3.2);
     const buf = ctx.createBuffer(1, len, sr);
     const out = buf.getChannelData(0);
@@ -124,8 +125,8 @@
     // Kích thích: nhiễu qua hai tầng lọc thấp → tiếng gảy mềm như đầu ngón tay, không rít như móng/pick cứng
     let p1 = 0, p2 = 0;
     for (let i = 0; i < N; i++) {
-      p1 += 0.55 * ((Math.random() * 2 - 1) - p1);
-      p2 += 0.55 * (p1 - p2);
+      p1 += 0.3 * ((Math.random() * 2 - 1) - p1);
+      p2 += 0.3 * (p1 - p2);
       ring[i] = p2;
     }
     // Vị trí gảy (~1/7 dây, gần lỗ thoát âm): bộ lọc răng lược làm bớt các họa âm chói
@@ -138,22 +139,24 @@
     for (let i = 0; i < N; i++) { ring[i] -= mean; peak = Math.max(peak, Math.abs(ring[i])); }
     const norm = peak > 0 ? 0.9 / peak : 1;
     for (let i = 0; i < N; i++) ring[i] *= norm;
-    const halfLife = Math.max(0.5, Math.min(2.2, 2.2 - (m - 40) * 0.03));
+    const halfLife = Math.max(0.6, Math.min(2.4, 2.4 - (m - 40) * 0.03));
     const decay = Math.pow(0.5, 1 / (f * halfLife));
     let idx = 0;
     for (let i = 0; i < len; i++) {
       const n1 = idx + 1 === N ? 0 : idx + 1;
       const n2 = n1 + 1 === N ? 0 : n1 + 1;
+      const n3 = n2 + 1 === N ? 0 : n2 + 1;
+      const n4 = n3 + 1 === N ? 0 : n3 + 1;
       const cur = ring[idx];
       out[i] = cur;
-      // Lọc 3 điểm (0.25, 0.5, 0.25) làm dải cao tắt nhanh hơn dải trầm, như dây đàn thật
-      ring[idx] = decay * (0.25 * cur + 0.5 * ring[n1] + 0.25 * ring[n2]);
+      // Lọc 5 điểm (1 4 6 4 1)/16 làm dải cao tắt rất nhanh, dải trầm ngân lâu: tiếng tròn như dây nylon
+      ring[idx] = decay * (0.0625 * (cur + ring[n4]) + 0.25 * (ring[n1] + ring[n3]) + 0.375 * ring[n2]);
       idx = n1;
     }
     const fade = Math.floor(sr * 0.08);
     for (let i = 0; i < fade; i++) out[len - 1 - i] *= i / fade;
     // Chỉnh tốc độ phát để đúng cao độ (vì N phải là số nguyên).
-    const entry = { buf, rate: f * (N + 1) / sr };
+    const entry = { buf, rate: f * (N - 2) / sr };
     ksCache.set(m, entry);
     return entry;
   }
@@ -164,13 +167,21 @@
     const src = ctx.createBufferSource();
     src.buffer = buf;
     src.playbackRate.value = rate;
+    // Lọc thấp riêng cho từng nốt, mở theo cao độ rồi khép dần sau tiếng gảy
+    const f = hz(m);
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.Q.value = 0.3;
+    lp.frequency.setValueAtTime(Math.min(3200, Math.max(1400, f * 9)), when);
+    lp.frequency.setTargetAtTime(Math.min(2000, Math.max(800, f * 4)), when + 0.01, 0.12);
     const g = ctx.createGain();
     const end = when + dur;
     g.gain.setValueAtTime(0, when);
-    g.gain.linearRampToValueAtTime(vel, when + 0.004); // bỏ tiếng “tách” ở đầu nốt
+    g.gain.linearRampToValueAtTime(vel, when + 0.006); // bỏ tiếng “tách” ở đầu nốt
     g.gain.setValueAtTime(vel, end);
     g.gain.setTargetAtTime(0, end, 0.06);
-    src.connect(g);
+    src.connect(lp);
+    lp.connect(g);
     g.connect(A.guitarBus);
     src.start(when);
     src.stop(end + 0.45);
@@ -239,10 +250,12 @@
     if (style === 'up') list.reverse();
     const gap = style === 'arp' ? (o.gap || 0.2) : style === 'block' ? 0 : (o.gap || 0.022);
     const vel = o.vel !== undefined ? o.vel : (inst === 'guitar' ? 0.62 : 0.55);
+    // Guitar: dây cao gảy nhẹ hơn dây trầm để hợp âm không bị gắt ở dải cao
+    const tilt = m => inst === 'guitar' ? Math.max(0.7, Math.min(1, 1 - (m - 52) * 0.018)) : 1;
     list.forEach((m, i) => note(m, {
       instrument: inst, when: t0 + i * gap,
       dur: (o.dur || (style === 'arp' ? 2.4 : 2)) - (style === 'arp' ? 0 : i * gap),
-      vel: vel * (style === 'up' ? 0.8 : 1), group: o.group
+      vel: vel * tilt(m) * (style === 'up' ? 0.8 : 1), group: o.group
     }));
   }
 

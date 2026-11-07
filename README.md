@@ -42,6 +42,8 @@ rồi mở `http://localhost:8000`.
 3. Vào **Settings → Pages**. Ở mục **Build and deployment**, chọn **Deploy from a branch**, nhánh `main`, thư mục `/ (root)`, rồi bấm **Save**.
 4. Sau một đến hai phút, web chạy tại `https://<tên-tài-khoản>.github.io/phim-va-phim/`.
 
+Mỗi lần sửa file JS/CSS, tăng số `?v=` trong các thẻ `<script>` và `<link>` ở `index.html` (ví dụ `?v=3` → `?v=4`) để trình duyệt của người dùng tải bản mới thay vì dùng bản cũ trong bộ nhớ đệm.
+
 File `index.html` phải nằm ngay ở thư mục gốc của repository (không nằm trong thư mục con).
 
 ## Dùng với FL Studio
