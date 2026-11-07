@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Phím &amp; Phím — Nhạc lý cho guitar, piano và FL Studio</title>
+  <meta name="description" content="Tra hợp âm và âm giai trên cần đàn guitar và piano, dựng vòng hợp âm, xuất MIDI cho FL Studio, luyện tai, metronome và tuner.">
+  <meta name="theme-color" content="#eef1ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#182624" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233b2219'/%3E%3Cpath d='M11 5v22M21 5v22' stroke='%23c9ccd1' stroke-width='2'/%3E%3Cpath d='M4 10h24M4 16h24M4 22h24' stroke='%23e8dcc4' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23d8432f'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Big+Shoulders+Display:wght@600;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Bỏ qua, đến nội dung chính</a>
+
+<div class="app">
+  <header class="top">
+    <a class="brand" href="#hop-am">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" class="bm-wood"/>
+        <path d="M11 4v24M21 4v24" class="bm-fret"/>
+        <path d="M3 10h26M3 16h26M3 22h26" class="bm-string"/>
+        <circle cx="16" cy="16" r="4.2" class="bm-dot"/>
+      </svg>
+      <span class="brand-name">Phím &amp; Phím</span>
+    </a>
+    <p class="brand-sub">Nhạc lý cho guitar, piano và FL Studio</p>
+    <div class="top-actions">
+      <button type="button" id="metro-chip" class="metro-chip" hidden aria-label="Metronome đang chạy, bấm để dừng">
+        <span class="pulse" aria-hidden="true"></span><span>80 BPM</span>
+      </button>
+      <button type="button" id="open-settings" class="icon-btn" aria-label="Cài đặt" aria-controls="settings">
+        <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 4v16M12 4v16M18 4v16"/><rect x="3.5" y="13" width="5" height="3.4" rx="1.2" fill="var(--paper)"/><rect x="9.5" y="6.5" width="5" height="3.4" rx="1.2" fill="var(--paper)"/><rect x="15.5" y="11" width="5" height="3.4" rx="1.2" fill="var(--paper)"/></g></svg></span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Các công cụ">
+    <p class="rail-group">Tra cứu</p>
+    <a href="#hop-am" data-view="chord">Hợp âm</a>
+    <a href="#am-giai" data-view="scale">Âm giai</a>
+    <a href="#vong-quang-5" data-view="circle">Vòng quãng 5</a>
+    <a href="#can-dan" data-view="fret">Bản đồ cần đàn</a>
+    <p class="rail-group">Sáng tác</p>
+    <a href="#vong-hop-am" data-view="prog">Vòng hợp âm</a>
+    <a href="#nhan-dien" data-view="ident">Nhận diện hợp âm</a>
+    <p class="rail-group">Luyện</p>
+    <a href="#luyen-tap" data-view="train">Luyện tập</a>
+    <a href="#cong-cu" data-view="tools">Metronome &amp; tuner</a>
+    <a href="#bai-hoc" data-view="learn">Bài học &amp; lộ trình</a>
+  </nav>
+
+  <main id="main" tabindex="-1">
+
+    <!-- ===================== HỢP ÂM ===================== -->
+    <section class="view" id="view-chord" aria-labelledby="c-name" hidden>
+      <div class="picker">
+        <div class="field">
+          <span class="field-label">Nốt gốc</span>
+          <div id="c-root"></div>
+        </div>
+        <div class="field grow">
+          <span class="field-label">Loại hợp âm</span>
+          <div id="c-type" class="types"></div>
+        </div>
+      </div>
+
+      <div class="head">
+        <div class="head-name">
+          <h1 id="c-name" class="big">C</h1>
+          <p id="c-read" class="reading"></p>
+        </div>
+        <div id="c-formula" class="formula" aria-label="Các nốt của hợp âm"></div>
+        <div class="head-actions">
+          <button type="button" class="btn" id="c-play"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span><span>Nghe</span></button>
+          <button type="button" class="btn ghost" id="c-arp">Nghe rải</button>
+          <button type="button" class="btn ghost" id="c-midi">Tải MIDI</button>
+        </div>
+      </div>
+      <p id="c-desc" class="desc"></p>
+
+      <div class="board-bar">
+        <div id="c-legend" class="legend"></div>
+        <div class="board-opts">
+          <label class="mini">Nốt bass <select id="c-bass"></select></label>
+          <div id="c-label"></div>
+        </div>
+      </div>
+      <div class="board" id="c-board"></div>
+
+      <div class="cols">
+        <section class="col">
+          <h2>Thế bấm guitar</h2>
+          <p class="hint">Bấm một thế để nghe và xem vị trí trên cần đàn. Số trong chấm là ngón tay: 1 trỏ, 2 giữa, 3 áp út, 4 út.</p>
+          <div id="c-voicings" class="voicings"></div>
+        </section>
+        <section class="col">
+          <h2>Trên piano</h2>
+          <div id="c-inv"></div>
+          <div class="keys" id="c-piano"></div>
+          <p class="hint" id="c-fing"></p>
+          <h2>Thuộc giọng nào</h2>
+          <div id="c-keys" class="chips"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ===================== ÂM GIAI ===================== -->
+    <section class="view" id="view-scale" aria-labelledby="s-name" hidden>
+      <div class="picker">
+        <div class="field">
+          <span class="field-label">Nốt chủ</span>
+          <div id="s-root"></div>
+        </div>
+        <div class="field grow">
+          <label class="field-label" for="s-type">Âm giai</label>
+          <select id="s-type" class="select-lg"></select>
+          <p id="s-desc" class="desc tight"></p>
+        </div>
+      </div>
+
+      <div class="head">
+        <div class="head-name">
+          <h1 id="s-name" class="big"></h1>
+          <p id="s-read" class="reading"></p>
+        </div>
+        <div id="s-formula" class="formula" aria-label="Các nốt của âm giai"></div>
+        <div class="head-actions">
+          <button type="button" class="btn" id="s-up"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span><span>Nghe đi lên</span></button>
+          <button type="button" class="btn ghost" id="s-updown">Lên rồi xuống</button>
+          <button type="button" class="btn ghost" id="s-midi">Tải MIDI</button>
+        </div>
+      </div>
+      <div class="facts" id="s-facts"></div>
+
+      <div class="board-bar">
+        <div id="s-legend" class="legend"></div>
+        <div class="board-opts"><div id="s-label"></div></div>
+      </div>
+      <div id="s-pos" class="pos"></div>
+      <div class="board" id="s-board"></div>
+
+      <div class="cols">
+        <section class="col" id="s-dia-wrap">
+          <div class="col-head"><h2>Hợp âm thuận</h2><div id="s-sev"></div></div>
+          <div id="s-dia" class="dia"></div>
+          <p class="hint" id="s-dia-hint"></p>
+        </section>
+        <section class="col">
+          <h2>Trên piano</h2>
+          <div class="keys" id="s-piano"></div>
+          <div id="s-use" class="row"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ===================== VÒNG HỢP ÂM ===================== -->
+    <section class="view" id="view-prog" aria-labelledby="p-title" hidden>
+      <h1 id="p-title" class="page-title">Vòng hợp âm</h1>
+      <div class="picker">
+        <div class="field">
+          <span class="field-label">Giọng</span>
+          <div class="row">
+            <select id="p-key" aria-label="Chủ âm"></select>
+            <div id="p-mode"></div>
+            <button type="button" class="btn ghost sm" id="p-down" title="Hạ cả vòng nửa cung">Hạ ½ cung</button>
+            <button type="button" class="btn ghost sm" id="p-up" title="Nâng cả vòng nửa cung">Nâng ½ cung</button>
+          </div>
+        </div>
+        <div class="field grow">
+          <label class="field-label" for="p-preset">Vòng mẫu</label>
+          <select id="p-preset" class="select-lg"></select>
+          <p id="p-preset-note" class="desc tight"></p>
+        </div>
+      </div>
+
+      <div class="palette">
+        <div class="col-head"><h2>Hợp âm thuận của giọng</h2><div id="p-sev"></div></div>
+        <div id="p-dia" class="pal-row"></div>
+        <h3>Hợp âm mượn và hợp âm át phụ</h3>
+        <div id="p-borrow" class="pal-row"></div>
+        <div class="custom">
+          <span class="field-label">Hợp âm bất kỳ</span>
+          <select id="p-c-root" aria-label="Nốt gốc"></select>
+          <select id="p-c-type" aria-label="Loại hợp âm"></select>
+          <button type="button" class="btn ghost sm" id="p-c-add">Thêm vào vòng</button>
+        </div>
+      </div>
+
+      <div class="transport">
+        <button type="button" class="btn" id="p-play">Phát vòng</button>
+        <label class="mini">Tempo <input type="number" id="p-bpm" min="40" max="220" step="1" inputmode="numeric"> BPM</label>
+        <div id="p-style"></div>
+        <div id="p-inst"></div>
+        <label class="check"><input type="checkbox" id="p-loop"> Lặp lại</label>
+        <label class="check"><input type="checkbox" id="p-click"> Đếm nhịp</label>
+      </div>
+
+      <h2 class="sr-only">Các hợp âm trong vòng</h2>
+      <div id="p-line" class="timeline"></div>
+      <div id="p-tools" class="cardtools" hidden></div>
+
+      <div class="cols">
+        <section class="col">
+          <h2>Thế bấm guitar cho cả vòng</h2>
+          <p class="hint">Mỗi thế được chọn sao cho tay ít phải di chuyển nhất.</p>
+          <div id="p-diagrams" class="diagram-row"></div>
+        </section>
+        <section class="col">
+          <h2>Capo</h2>
+          <select id="p-capo" aria-label="Vị trí capo"></select>
+          <p id="p-capo-shapes" class="capo-text"></p>
+          <div id="p-capo-sug" class="chips stack"></div>
+        </section>
+      </div>
+
+      <section class="block">
+        <h2>Piano roll</h2>
+        <p class="hint">Giống Piano roll của FL Studio: hàng dưới cùng là bass, phía trên là hợp âm tay phải đã dẫn giọng. Bấm một khối để nghe.</p>
+        <div class="roll" id="p-roll"></div>
+        <div class="keys" id="p-piano"></div>
+        <p class="hint" id="p-piano-cap"></p>
+      </section>
+
+      <section class="block export">
+        <h2>Mang đi</h2>
+        <div class="row gap">
+          <button type="button" class="btn" id="p-midi"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg></span><span>Tải MIDI cho FL Studio</span></button>
+          <button type="button" class="btn ghost" id="p-copy">Sao chép hợp âm</button>
+        </div>
+        <div class="row gap save-row">
+          <input type="text" id="p-name" placeholder="Tên vòng, ví dụ “Điệp khúc bài mới”" aria-label="Tên vòng hợp âm" maxlength="60">
+          <button type="button" class="btn ghost" id="p-save">Lưu vòng</button>
+        </div>
+        <div id="p-saved" class="saved-list"></div>
+      </section>
+    </section>
+
+    <!-- ===================== NHẬN DIỆN ===================== -->
+    <section class="view" id="view-ident" aria-labelledby="i-title" hidden>
+      <h1 id="i-title" class="page-title">Nhận diện hợp âm</h1>
+      <p class="desc">Chọn các nốt bạn đang bấm, trang sẽ cho biết đó có thể là hợp âm gì.</p>
+      <div class="row gap">
+        <div id="i-input"></div>
+        <button type="button" class="btn ghost sm" id="i-play">Nghe các nốt</button>
+        <button type="button" class="btn ghost sm" id="i-clear">Xóa hết</button>
+      </div>
+      <div class="board" id="i-surface"></div>
+      <div id="i-notes" class="nchips" aria-live="polite"></div>
+      <div id="i-results" class="results" aria-live="polite"></div>
+    </section>
+
+    <!-- ===================== VÒNG QUÃNG 5 ===================== -->
+    <section class="view" id="view-circle" aria-labelledby="o-page" hidden>
+      <h1 id="o-page" class="page-title">Vòng quãng 5</h1>
+      <p class="desc">Đi theo chiều kim đồng hồ, mỗi bước lên một quãng 5 và thêm một dấu thăng. Đi ngược lại thì thêm một dấu giáng. Sáu hợp âm thuận của một giọng luôn nằm cạnh nhau (vùng được tô).</p>
+      <div class="circle-wrap">
+        <div id="o-circle" class="circle"></div>
+        <div id="o-info" class="circle-info"></div>
+      </div>
+    </section>
+
+    <!-- ===================== CẦN ĐÀN ===================== -->
+    <section class="view" id="view-fret" aria-labelledby="f-title" hidden>
+      <h1 id="f-title" class="page-title">Bản đồ cần đàn</h1>
+      <div id="f-mode"></div>
+      <div id="f-note-wrap" class="field" hidden><span class="field-label">Nốt cần tìm</span><div id="f-note"></div></div>
+      <p id="f-hint" class="desc"></p>
+      <div class="board" id="f-board"></div>
+      <div id="f-extra" class="fret-extra"></div>
+    </section>
+
+    <!-- ===================== LUYỆN TẬP ===================== -->
+    <section class="view" id="view-train" aria-labelledby="t-title" hidden>
+      <h1 id="t-title" class="page-title">Luyện tập</h1>
+      <div id="t-mode"></div>
+      <div id="t-settings" class="train-settings"></div>
+      <div class="quiz">
+        <div class="quiz-top">
+          <p id="t-prompt" class="prompt" aria-live="polite"></p>
+          <div class="row gap">
+            <button type="button" class="btn ghost sm" id="t-replay"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg></span><span>Nghe lại</span></button>
+            <span id="t-extra"></span>
+          </div>
+        </div>
+        <div class="board" id="t-board" hidden></div>
+        <div id="t-answers" class="answers"></div>
+        <p id="t-feedback" class="feedback" aria-live="polite"></p>
+        <button type="button" class="btn" id="t-next" hidden>Câu tiếp theo</button>
+      </div>
+      <div class="stats-row">
+        <div id="t-stats" class="stats"></div>
+        <button type="button" class="btn ghost sm" id="t-reset">Làm lại từ đầu</button>
+      </div>
+    </section>
+
+    <!-- ===================== CÔNG CỤ ===================== -->
+    <section class="view" id="view-tools" aria-labelledby="m-title" hidden>
+      <h1 id="m-title" class="page-title">Metronome &amp; tuner</h1>
+      <div class="cols tools">
+        <section class="col tool">
+          <h2>Metronome</h2>
+          <div class="bpm-row">
+            <button type="button" class="icon-btn" id="m-minus5" aria-label="Giảm 5 BPM">−5</button>
+            <button type="button" class="icon-btn" id="m-minus" aria-label="Giảm 1 BPM">−1</button>
+            <div class="bpm"><output id="m-bpm" class="big">80</output><span class="bpm-unit">BPM</span><span id="m-tempo" class="bpm-name"></span></div>
+            <button type="button" class="icon-btn" id="m-plus" aria-label="Tăng 1 BPM">+1</button>
+            <button type="button" class="icon-btn" id="m-plus5" aria-label="Tăng 5 BPM">+5</button>
+          </div>
+          <input type="range" id="m-range" min="30" max="240" aria-label="Tempo">
+          <div id="m-beats" class="beats" aria-hidden="true"></div>
+          <div class="row gap">
+            <button type="button" class="btn" id="m-start">Bắt đầu</button>
+            <button type="button" class="btn ghost" id="m-tap">Gõ để đo tempo</button>
+          </div>
+          <div class="row gap wrap">
+            <label class="mini">Nhịp <select id="m-sig"></select></label>
+            <label class="check"><input type="checkbox" id="m-accent"> Nhấn phách đầu</label>
+          </div>
+          <div class="field"><span class="field-label">Chia nhỏ phách</span><div id="m-sub"></div><p id="m-sub-note" class="hint"></p></div>
+          <div class="trainer">
+            <label class="check"><input type="checkbox" id="m-trainer"> Tự tăng tốc</label>
+            <p class="trainer-row">Thêm <input type="number" id="m-step" min="1" max="20" aria-label="Số BPM tăng"> BPM sau mỗi <input type="number" id="m-bars" min="1" max="16" aria-label="Số ô nhịp"> ô nhịp, tối đa <input type="number" id="m-max" min="40" max="240" aria-label="Tempo tối đa"> BPM.</p>
+          </div>
+        </section>
+
+        <section class="col tool">
+          <h2>Tuner</h2>
+          <div id="u-wrap" class="tuner">
+            <div id="u-gauge"></div>
+            <div class="tuner-note"><span id="u-note" class="big">–</span><span id="u-oct"></span></div>
+            <p id="u-info" class="tuner-info" aria-live="polite"></p>
+          </div>
+          <div class="row gap wrap">
+            <button type="button" class="btn" id="u-start"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></g></svg></span><span>Bật micro</span></button>
+            <label class="mini">A4 = <select id="u-a4"></select></label>
+          </div>
+          <p id="u-status" class="hint">Trình duyệt sẽ hỏi quyền dùng micro. Âm thanh chỉ được xử lý ngay trên máy bạn.</p>
+          <h3>Âm chuẩn từng dây</h3>
+          <p class="hint">Cách lên dây: <span id="u-tuning"></span>. Đổi trong Cài đặt.</p>
+          <div id="u-strings" class="chips"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ===================== BÀI HỌC ===================== -->
+    <section class="view" id="view-learn" aria-labelledby="l-title" hidden>
+      <h1 id="l-title" class="page-title">Bài học &amp; lộ trình</h1>
+      <p class="desc">Đánh dấu những gì bạn đã làm được. Tiến độ được lưu trên trình duyệt này.</p>
+      <div id="l-road" class="road"></div>
+      <h2>Bài học</h2>
+      <div id="l-lessons" class="lessons"></div>
+    </section>
+
+    <footer class="foot">
+      <p>Phím &amp; Phím là mã nguồn mở. Âm thanh được tạo ngay trong trình duyệt, không cần cài đặt gì.</p>
+    </footer>
+  </main>
+</div>
+
+<!-- ===================== CÀI ĐẶT ===================== -->
+<div id="sheet-bd" class="sheet-bd" hidden></div>
+<aside id="settings" class="sheet" role="dialog" aria-modal="true" aria-labelledby="set-title" hidden>
+  <div class="sheet-head">
+    <h2 id="set-title">Cài đặt</h2>
+    <button type="button" id="close-settings" class="icon-btn" aria-label="Đóng cài đặt">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="m7 7 10 10M17 7 7 17"/></svg></span>
+    </button>
+  </div>
+  <div class="set-row"><span class="set-k">Tên nốt</span><div id="set-naming"></div></div>
+  <div class="set-row"><span class="set-k">Âm thanh khi bấm Nghe</span><div id="set-inst"></div></div>
+  <div class="set-row"><label class="set-k" for="set-volume">Âm lượng</label><input type="range" id="set-volume" min="0" max="100"></div>
+  <div class="set-row"><label class="set-k" for="set-tuning">Cách lên dây</label><select id="set-tuning"></select></div>
+  <div class="set-row"><label class="set-k" for="set-frets">Số phím hiển thị</label><select id="set-frets"></select></div>
+  <div class="set-row"><label class="check"><input type="checkbox" id="set-left"> Cần đàn cho người thuận tay trái</label></div>
+  <div class="set-row"><span class="set-k">Giao diện</span><div id="set-theme"></div></div>
+  <div class="set-row danger-zone"><button type="button" class="btn ghost sm danger" id="set-reset">Xóa dữ liệu đã lưu</button></div>
+</aside>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="js/theory.js"></script>
+<script src="js/midi.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/render.js"></script>
+<script src="js/lessons.js"></script>
+<script src="js/app.js"></script>
+<script src="js/views/chord.js"></script>
+<script src="js/views/scale.js"></script>
+<script src="js/views/prog.js"></script>
+<script src="js/views/ident.js"></script>
+<script src="js/views/circle.js"></script>
+<script src="js/views/fret.js"></script>
+<script src="js/views/train.js"></script>
+<script src="js/views/tools.js"></script>
+<script src="js/views/learn.js"></script>
+<script>App.start();</script>
+</body>
+</html>
