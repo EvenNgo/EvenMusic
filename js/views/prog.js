@@ -227,7 +227,7 @@
         const midis = (g ? g.midis : kb.all).slice().sort((a, b) => a - b);
         const strum = (when, dir, vel, dur) => {
           const list = dir > 0 ? midis : midis.slice().reverse().slice(0, Math.min(4, midis.length));
-          list.forEach((m, k) => N(m, when + k * 0.016, Math.max(0.12, dur - k * 0.016), vel));
+          list.forEach((m, k) => N(m, when + k * 0.026, Math.max(0.12, dur - k * 0.026), vel * Math.max(0.75, 1 - (m - 52) * 0.015)));
         };
         if (style === 'block') strum(start, 1, 0.62, len);
         else if (style === 'rhythm') {

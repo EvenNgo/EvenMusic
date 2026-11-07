@@ -248,12 +248,14 @@
     const style = o.style || (inst === 'guitar' ? 'strum' : 'block');
     let list = midis.slice().sort((a, b) => a - b);
     if (style === 'up') list.reverse();
-    const gap = style === 'arp' ? (o.gap || 0.2) : style === 'block' ? 0 : (o.gap || 0.022);
+    // Quạt guitar: mỗi dây cách nhau ~45 ms (cả 6 dây ~0,23 s) như tay quạt thật, thay vì gần như cùng lúc
+    const gap = style === 'arp' ? (o.gap || 0.2) : style === 'block' ? 0 : (o.gap || (inst === 'guitar' ? 0.045 : 0.022));
+    const jitter = () => style === 'strum' || style === 'up' ? (Math.random() - 0.5) * gap * 0.3 : 0;
     const vel = o.vel !== undefined ? o.vel : (inst === 'guitar' ? 0.62 : 0.55);
     // Guitar: dây cao gảy nhẹ hơn dây trầm để hợp âm không bị gắt ở dải cao
     const tilt = m => inst === 'guitar' ? Math.max(0.7, Math.min(1, 1 - (m - 52) * 0.018)) : 1;
     list.forEach((m, i) => note(m, {
-      instrument: inst, when: t0 + i * gap,
+      instrument: inst, when: t0 + i * gap + (i ? jitter() : 0),
       dur: (o.dur || (style === 'arp' ? 2.4 : 2)) - (style === 'arp' ? 0 : i * gap),
       vel: vel * tilt(m) * (style === 'up' ? 0.8 : 1), group: o.group
     }));

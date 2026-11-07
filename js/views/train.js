@@ -125,12 +125,11 @@
       if (mode === 'build') {
         const { root, type, tones } = this.randomChord();
         const sym = T.chordSymbol(root, type);
-        const midis = T.closeVoicing(root, type, 0).map(x => x.midi);
         return {
           kind: 'build', root, type, tones, sym, silent: true, t0: performance.now(),
           prompt: 'Bấm đủ ' + tones.length + ' nốt của hợp âm ' + sym,
           sub: T.CHORD[type].name,
-          picked: new Set(), play: () => Sound.chord(midis, { instrument: S.settings.instrument }),
+          picked: new Set(), play: () => App.playChord(root, type),
           explain: () => sym + ' = ' + this.formula(type) + ' → ' + this.spelled(tones) + '. Mẹo: ' + QUICK[type]
         };
       }
@@ -157,13 +156,12 @@
           opts.push(s2);
         });
         const shown = S.train.nameShuffle ? shuffle(tones) : tones;
-        const midis = T.closeVoicing(root, type, 0).map(x => x.midi);
         return {
           kind: 'name', silent: true, t0: performance.now(), root, type,
           prompt: 'Các nốt ' + shown.map(t => App.nn(t.note)).join(' – ') + ' là hợp âm gì?',
           sub: S.train.nameShuffle ? 'Các nốt đã bị xáo thứ tự: hãy tìm nốt gốc trước.' : 'Nốt đầu tiên là nốt gốc.',
           options: shuffle(opts), answer: sym, label: x => x,
-          play: () => Sound.chord(midis, { instrument: S.settings.instrument }),
+          play: () => App.playChord(root, type),
           explain: () => sym + ' = ' + this.formula(type) + ' tính từ ' + App.nn(root) + ': ' + tones.map(t => App.nn(t.note)).join(' – ') + '. ' + QUICK[type]
         };
       }
