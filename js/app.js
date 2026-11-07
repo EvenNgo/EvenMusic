@@ -47,7 +47,7 @@
     ident: { input: 'piano', notes: [], frets: null },
     circle: { i: 0, mode: 'major' },
     fret: { mode: 'all', note: 'C', ref: { s: 0, f: 3 } },
-    train: { mode: 'interval', ivSet: [2, 3, 4, 5, 7, 12], ivDir: 'up', chordSet: ['maj', 'min', 'dim', 'aug'], fretMax: 12, fretNatural: true, stats: {} },
+    train: { mode: 'build', buildSet: ['maj', 'min', 'dim', 'aug'], buildRoots: 'natural', nameShuffle: false, ivSet: [2, 3, 4, 5, 7, 12], ivDir: 'up', ivSet: [2, 3, 4, 5, 7, 12], ivDir: 'up', chordSet: ['maj', 'min', 'dim', 'aug'], fretMax: 12, fretNatural: true, stats: {} },
     metro: { bpm: 80, sig: '4/4', sub: 1, accent: true, trainer: false, step: 5, bars: 4, max: 140 },
     tuner: { a4: 440 },
     road: {}
@@ -76,6 +76,8 @@
     if (!okRoot(s.prog.key)) s.prog.key = 'C';
     s.prog.items = (s.prog.items || []).filter(it => it && T.CHORD[it.type] && /^(bb|b|##|#)?\d+$/.test(it.iv));
     if (!Array.isArray(s.prog.saved)) s.prog.saved = [];
+    if (!Array.isArray(s.train.buildSet) || !s.train.buildSet.some(id => T.CHORD[id])) s.train.buildSet = ['maj', 'min', 'dim', 'aug'];
+    s.train.buildSet = s.train.buildSet.filter(id => T.CHORD[id]);
     return s;
   }
   const S = App.S = load();

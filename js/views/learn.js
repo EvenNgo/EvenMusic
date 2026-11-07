@@ -7,14 +7,26 @@
     mount() {
       const root = $('#view-learn');
       root.addEventListener('click', e => {
-        const b = e.target.closest('[data-seq],[data-play],[data-chord],[data-go]');
+        const b = e.target.closest('[data-seq],[data-play],[data-chord],[data-prog],[data-go]');
         if (!b) return;
-        if (b.dataset.seq) Sound.sequence(b.dataset.seq.split(',').map(Number), { instrument: 'piano', step: 0.32 });
+        if (b.dataset.prog) this.playProg(b.dataset.prog);
+        else if (b.dataset.seq) Sound.sequence(b.dataset.seq.split(',').map(Number), { instrument: 'piano', step: 0.32 });
         else if (b.dataset.play) Sound.chord(b.dataset.play.split(',').map(Number), { instrument: 'piano', style: 'block' });
         else if (b.dataset.chord) {
           const [r, type] = b.dataset.chord.split(':');
           Sound.chord(T.closeVoicing(T.parseNote(r), type, 0).map(x => x.midi), { instrument: S.settings.instrument });
         } else this.go(b.dataset.go.split('|'));
+      });
+    },
+
+    /** Phát lần lượt các hợp âm, mỗi hợp âm khoảng 1,4 giây. */
+    playProg(text) {
+      Sound.stopGroup('free');
+      const t0 = Sound.now() + 0.05;
+      const inst = S.settings.instrument;
+      text.split(',').forEach((x, i) => {
+        const [r, type] = x.split(':');
+        Sound.chord(T.closeVoicing(T.parseNote(r), type, 0).map(n => n.midi), { instrument: inst, when: t0 + i * 1.4, dur: 1.5 });
       });
     },
 
