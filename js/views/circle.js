@@ -23,7 +23,7 @@
           S.circle = { i: ni, mode: nm };
           this.render(); App.save();
           const k = this.keyOf(ni, nm);
-          Sound.chord(T.closeVoicing(k, nm === 'minor' ? 'min' : 'maj', 0).map(x => x.midi), { instrument: S.settings.instrument });
+          App.playChord(k, nm === 'minor' ? 'min' : 'maj');
         }
       });
 
@@ -44,7 +44,7 @@
       const dia = h('div', { class: 'dia mini' });
       T.diatonicChords(key, mode, false).forEach(d => dia.appendChild(h('button', {
         type: 'button', class: 'dcard-main', title: d.func || '',
-        onclick: () => Sound.chord(T.closeVoicing(d.root, d.typeId, 0).map(x => x.midi), { instrument: S.settings.instrument })
+        onclick: () => App.playChord(d.root, d.typeId)
       }, h('span', { class: 'dc-rn' }, d.roman), h('span', { class: 'dc-sym' }, T.chordSymbol(d.root, d.typeId)))));
       info.appendChild(dia);
 

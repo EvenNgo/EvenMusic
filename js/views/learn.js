@@ -14,7 +14,7 @@
         else if (b.dataset.play) Sound.chord(b.dataset.play.split(',').map(Number), { instrument: 'piano', style: 'block' });
         else if (b.dataset.chord) {
           const [r, type] = b.dataset.chord.split(':');
-          Sound.chord(T.closeVoicing(T.parseNote(r), type, 0).map(x => x.midi), { instrument: S.settings.instrument });
+          App.playChord(T.parseNote(r), type);
         } else this.go(b.dataset.go.split('|'));
       });
     },
@@ -26,7 +26,7 @@
       const inst = S.settings.instrument;
       text.split(',').forEach((x, i) => {
         const [r, type] = x.split(':');
-        Sound.chord(T.closeVoicing(T.parseNote(r), type, 0).map(n => n.midi), { instrument: inst, when: t0 + i * 1.4, dur: 1.5 });
+        Sound.chord(App.chordMidis(T.parseNote(r), type), { instrument: inst, when: t0 + i * 1.6, dur: 1.7 });
       });
     },
 

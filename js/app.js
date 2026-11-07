@@ -166,6 +166,15 @@
     return global.Draw.chordDiagram(v, { fams, bottom, aria });
   };
 
+  /** Nốt để phát một hợp âm: với guitar dùng thế bấm thật (nốt trải rộng trên 6 dây), với piano dùng thế sát. */
+  App.chordMidis = function (root, type, inst) {
+    if ((inst || S.settings.instrument) === 'guitar') {
+      const vs = App.voicings(root, type);
+      if (vs.length) return vs[0].midis;
+    }
+    return T.closeVoicing(root, type, 0).map(x => x.midi);
+  };
+  App.playChord = (root, type, o) => global.Sound.chord(App.chordMidis(root, type), Object.assign({ instrument: S.settings.instrument }, o || {}));
   App.play = (midis, style) => global.Sound.chord(midis, { instrument: S.settings.instrument, style });
   App.playNote = m => global.Sound.note(m, { instrument: S.settings.instrument });
 

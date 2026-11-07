@@ -184,7 +184,7 @@
             onclick: () => {
               S.scale.focus = on ? null : i;
               this.render(); App.save();
-              if (!on) Sound.chord(T.closeVoicing(dc.root, dc.typeId, 0).map(x => x.midi), { instrument: S.settings.instrument });
+              if (!on) App.playChord(dc.root, dc.typeId);
             }
           },
           h('span', { class: 'dc-rn' }, dc.roman),
