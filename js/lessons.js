@@ -292,6 +292,113 @@ ${chordTable('C', [
 <p>Mẹo viết giai điệu: đi liền bậc là chính; sau một bước nhảy xa, hãy đi ngược lại theo bậc liền. Lặp lại một mô-típ nhịp điệu ngắn giúp người nghe nhớ bài.</p>
 <p>Mẹo cho ca sĩ: tìm nốt cao nhất và thấp nhất bạn hát thoải mái, rồi chọn giọng (và capo) sao cho điệp khúc nằm gần đỉnh âm vực đó.</p>
 <p>${go('prog', 'Bắt đầu với một vòng hợp âm')}</p>`
+    },
+    {
+      id: 'remake1', title: 'Remake 1: chọn bài và nghe để phân tích',
+      html: `
+<p><strong>Remake</strong> là dựng lại một bài có sẵn từ đầu: tự viết lại trống, bass, hợp âm, giai điệu trong FL Studio cho giống bản gốc (hoặc giống tinh thần bản gốc). Đây là cách học sản xuất nhanh nhất, vì bạn có sẵn “đáp án” để so sánh từng chi tiết.</p>
+<h4>Chọn bài cho lần đầu</h4>
+<ul>
+<li><strong>Ít hợp âm</strong>: tốt nhất là cả bài xoay quanh 3–4 hợp âm lặp lại.</li>
+<li><strong>Ít nhạc cụ</strong>: trống, bass, một nhạc cụ hòa âm (piano/guitar/pad), giọng hát. Tránh bài có dàn dây hay quá nhiều lớp tiếng.</li>
+<li><strong>Nhịp rõ, tempo không đổi</strong>: pop, ballad, lo-fi, EDM dễ hơn nhạc thu trực tiếp với ban nhạc.</li>
+<li><strong>Bài bạn thật sự thích</strong>: bạn sẽ phải nghe nó vài chục lần.</li>
+</ul>
+<p>Xác định mục tiêu trước: <em>remake sát bản gốc</em> (học cách người ta làm) hay <em>làm lại theo phong cách riêng</em> (ví dụ biến ballad thành lo-fi). Lần đầu nên chọn cách thứ nhất.</p>
+<h4>Nghe chủ động: lập “bản đồ” bài hát</h4>
+<p>Nghe bài từ đầu đến cuối, ghi ra giấy từng đoạn kèm thời điểm bắt đầu và số ô nhịp (đếm 1-2-3-4 theo phách, mỗi lần đếm hết 4 là một ô nhịp). Ví dụ:</p>
+<div class="table-wrap"><table class="ltable"><thead><tr><th>Đoạn</th><th>Bắt đầu</th><th>Số ô nhịp</th><th>Có những tiếng gì</th></tr></thead><tbody>
+<tr><td>Intro</td><td>0:00</td><td>4</td><td>piano, tiếng mưa</td></tr>
+<tr><td>Verse 1</td><td>0:08</td><td>8</td><td>piano, giọng, kick nhẹ</td></tr>
+<tr><td>Pre-chorus</td><td>0:24</td><td>4</td><td>thêm bass, snare dồn</td></tr>
+<tr><td>Chorus</td><td>0:32</td><td>8</td><td>đủ trống, pad, bè</td></tr>
+<tr><td>…</td><td></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Hầu hết các đoạn dài 4, 8 hoặc 16 ô nhịp. Nếu bạn đếm ra số lẻ như 7 hay 9, hãy nghe lại: thường là có một ô nhịp “nghỉ” hoặc bạn đếm nhầm chỗ bắt đầu.</p>
+<p>Sau đó nghe lại mỗi lần <strong>chỉ tập trung vào một nhạc cụ</strong>: một lượt chỉ nghe trống, một lượt chỉ nghe bass, một lượt chỉ nghe hợp âm… Ghi lại khi nào nhạc cụ đó vào, khi nào nghỉ. Đây chính là bản phối bạn sẽ dựng lại.</p>`
+    },
+    {
+      id: 'remake2', title: 'Remake 2: tìm tempo, giọng và hợp âm',
+      html: `
+<h4>1. Tempo (BPM)</h4>
+<p>Mở trang Metronome, bấm <strong>Gõ để đo tempo</strong> theo từng phách của bài (theo tiếng kick/snare hoặc theo nhịp chân) khoảng 8–10 lần, rồi làm tròn ra số nguyên. Sau đó bật metronome ở tempo đó và nghe song song với bài gốc: sau 16 ô nhịp vẫn khớp là đúng.</p>
+<p>Lưu ý: cùng một bài có thể đo ra 70 hay 140 BPM tùy bạn gõ theo phách nào. Hãy chọn sao cho snare rơi vào phách 2 và 4.</p>
+<p>${go('tools', 'Mở metronome để đo tempo')}</p>
+<h4>2. Giọng (key)</h4>
+<ul>
+<li>Tìm <strong>nốt chủ</strong>: nốt nghe như “về nhà”, thường là nốt kết thúc điệp khúc hoặc kết bài. Ngân nốt đó.</li>
+<li>Dò nốt đó trên đàn, hoặc ngân vào micro ở trang <strong>Tuner</strong> để biết đó là nốt gì.</li>
+<li>Quyết định trưởng hay thứ: bài nghe sáng là trưởng, nghe buồn và tối là thứ. Mỗi giọng trưởng có một giọng thứ dùng chung nốt (C trưởng ↔ A thứ), nên điều quyết định là bài “về nhà” ở nốt nào.</li>
+<li>Kiểm tra: mở âm giai của giọng đó, chơi các nốt theo bài gốc. Không nốt nào nghe lạc là đúng giọng.</li>
+</ul>
+<p>${go('tools', 'Mở tuner')} ${go('scale|C|major', 'Mở trang Âm giai')}</p>
+<h4>3. Hợp âm</h4>
+<ol>
+<li><strong>Nghe bass trước.</strong> Nốt bass ở đầu mỗi ô nhịp gần như luôn là nốt gốc của hợp âm. Dò dãy nốt bass trên đàn, ví dụ C – G – A – F.</li>
+<li><strong>Đoán loại hợp âm bằng hợp âm thuận.</strong> Trong giọng C trưởng có C, Dm, Em, F, G, Am, Bdim. Bass C – G – A – F → rất có thể là C – G – Am – F. Nhập vòng đó ở trang Vòng hợp âm và phát song song với bài để so.</li>
+<li><strong>Nghe màu.</strong> Nếu hợp âm của bạn “đúng nhưng nhạt” so với bản gốc, thử thêm màu: maj7, m7, add9, sus4 (xem các bài về hợp âm màu ở trên).</li>
+<li><strong>Nốt bass không phải nốt gốc?</strong> Đó có thể là hợp âm đảo (slash chord) như C/E, G/B, rất hay gặp khi bass đi xuống từng bậc: C – G/B – Am – F.</li>
+<li>Khi đã nghe ra vài nốt của một hợp âm, bấm chúng ở trang <strong>Nhận diện hợp âm</strong> để biết tên.</li>
+</ol>
+<p>Các vòng rất hay gặp, nên thử trước khi dò từng hợp âm:</p>
+<p>${prog([['C', 'maj'], ['G', 'maj'], ['A', 'min'], ['F', 'maj']])} ${prog([['A', 'min'], ['F', 'maj'], ['C', 'maj'], ['G', 'maj']])} ${prog([['F', 'maj'], ['G', 'maj'], ['E', 'min'], ['A', 'min']])} ${prog([['C', 'maj'], ['A', 'min'], ['F', 'maj'], ['G', 'maj']])} ${prog([['D', 'm7'], ['G', '7'], ['C', 'maj7']])}</p>
+<p>Có thể tra hợp âm trên mạng cho nhanh, nhưng <strong>luôn kiểm tra lại bằng tai</strong>: bản tra hay sai giọng (người đăng dùng capo) hoặc thiếu màu hợp âm. Nếu bản tra ghi capo, dùng phần capo ở trang Vòng hợp âm để đổi ra hợp âm thật.</p>
+<h4>4. Giai điệu</h4>
+<p>Dò từng câu ngắn, 2 ô nhịp một lần. Phát chậm bài gốc (YouTube có tốc độ 0.75×; FL Studio có thể kéo giãn audio mà không đổi cao độ). Giai điệu hầu như chỉ dùng nốt của âm giai, và nốt ở phách mạnh thường là nốt của hợp âm đang chơi: hai “hàng rào” này giúp bạn đoán nhanh hơn.</p>
+<p>${go('ident', 'Mở Nhận diện hợp âm')} ${go('prog', 'Nhập vòng vào trang Vòng hợp âm')}</p>`
+    },
+    {
+      id: 'remake3', title: 'Remake 3: dựng lại trong FL Studio',
+      html: `
+<h4>Chuẩn bị project</h4>
+<ol>
+<li>Đặt tempo của project bằng BPM đã đo.</li>
+<li>Kéo file bài gốc vào Playlist làm <strong>track tham chiếu</strong>, đặt sao cho phách 1 của bài khớp với vạch đầu một ô nhịp trên lưới. Nếu càng về sau bài gốc càng lệch khỏi lưới, tempo đo chưa đúng.</li>
+<li>Đặt <strong>marker</strong> trên thanh thời gian của Playlist ở đầu mỗi đoạn (Intro, Verse, Chorus…) theo bản đồ đã lập.</li>
+<li>Cho track tham chiếu vào một kênh mixer riêng để tiện bật/tắt và chỉnh âm lượng. Khi xuất bài nhớ tắt nó đi.</li>
+</ol>
+<h4>Thứ tự dựng</h4>
+<ol>
+<li><strong>Trống</strong>: đặt kick và snare/clap trước theo đúng vị trí trong bài gốc, rồi đến hi-hat và tiếng phụ (shaker, tom, percussion). Chọn tiếng kick/snare có độ dày và độ dài gần bản gốc, nghe so sánh từng tiếng một.</li>
+<li><strong>Bass</strong>: viết theo nốt gốc của từng hợp âm, rồi chép đúng nhịp điệu của bass gốc (bass thường đi cùng kick).</li>
+<li><strong>Hợp âm</strong>: nhập vòng ở trang Vòng hợp âm, bấm <strong>Tải MIDI</strong>, kéo vào Piano roll. Chọn tiếng (piano, Rhodes, pad, guitar…) gần bản gốc rồi chỉnh nhịp điệu cho giống.</li>
+<li><strong>Giai điệu chính / hook</strong>: viết giai điệu bằng một tiếng lead để thay giọng hát, hoặc thu giọng của bạn.</li>
+<li><strong>Các lớp phụ</strong>: pad nền, arp, pluck, guitar đệm, bè.</li>
+<li><strong>Hiệu ứng chuyển đoạn</strong>: riser, crash, reverse cymbal, tiếng “whoosh”, ngắt trống một nhịp trước điệp khúc… Những chi tiết nhỏ này làm bản remake nghe chuyên nghiệp hơn hẳn.</li>
+</ol>
+<h4>Mẹo làm việc</h4>
+<ul>
+<li>Mỗi đoạn dùng một <strong>pattern</strong> riêng, rồi xếp pattern lên Playlist theo marker. Đoạn lặp lại thì nhân bản pattern và sửa những chỗ khác nhau.</li>
+<li>Bật/tắt track tham chiếu liên tục và tự hỏi <em>“của mình thiếu gì?”</em>. Thường là thiếu một lớp tiếng, thiếu biến tấu ở đoạn sau, hoặc velocity các nốt quá đều.</li>
+<li>Không tìm được đúng tiếng thì chọn tiếng gần nhất rồi chỉnh <strong>envelope</strong> (độ vào, độ ngân, độ tắt) và <strong>filter</strong> (sáng/tối). Đúng nhịp điệu và nốt quan trọng hơn đúng 100% âm sắc.</li>
+<li>Pop/EDM hiện đại hay có <strong>sidechain</strong>: bass và pad “thở” theo kick. Nếu bản gốc có cảm giác nhún nhảy đó, hãy thêm vào.</li>
+<li>Lưu project thường xuyên, lưu thành nhiều phiên bản (remake-v1, v2…).</li>
+</ul>
+<p>${go('prog', 'Dựng vòng và tải MIDI')}</p>`
+    },
+    {
+      id: 'remake4', title: 'Remake 4: mix theo bản gốc và hoàn thiện',
+      html: `
+<h4>Cân âm lượng trước tiên</h4>
+<p>Kéo tất cả fader xuống thấp, nâng dần từng kênh theo thứ tự: kick → snare → bass → giọng/lead → hợp âm → lớp phụ. Giữ kênh Master không chạm đỏ. Phần lớn khác biệt giữa bản của bạn và bản gốc nằm ở <strong>tỉ lệ âm lượng giữa các nhạc cụ</strong>, chứ không phải ở plugin đắt tiền.</p>
+<h4>So sánh công bằng với bản gốc</h4>
+<p>Bản gốc đã được master nên luôn to hơn. Khi so sánh, <strong>hạ âm lượng track tham chiếu</strong> cho ngang bản của bạn, nếu không tai sẽ luôn thấy bản to hơn là hay hơn. So sánh ở âm lượng nhỏ, và nghe thử trên nhiều thiết bị: tai nghe, loa điện thoại, loa máy tính.</p>
+<h4>Vài bước mix cơ bản</h4>
+<ul>
+<li><strong>EQ</strong>: cắt bớt dải trầm ở mọi kênh trừ kick và bass để phần trầm không bị đục.</li>
+<li><strong>Pan</strong>: kick, snare, bass, giọng ở giữa; hi-hat, guitar, bè, pad mở sang hai bên.</li>
+<li><strong>Reverb và delay</strong> đặt trên kênh send dùng chung, gửi mỗi nhạc cụ một lượng vừa phải. Nghe bản gốc xem không gian rộng hay khô.</li>
+<li><strong>Compressor</strong> nhẹ cho giọng và bass để âm lượng đều hơn.</li>
+</ul>
+<h4>Hoàn thiện</h4>
+<ol>
+<li>Tắt track tham chiếu, xuất WAV (để lưu) và MP3 (để gửi nghe).</li>
+<li>Nghỉ một ngày rồi nghe lại, ghi ra 3 chỗ muốn sửa nhất.</li>
+<li>Cho bạn bè nghe và hỏi: “Nghe có giống bài gốc không? Chỗ nào khác nhất?”</li>
+</ol>
+<h4>Về bản quyền</h4>
+<p>Remake để tự học trên máy của bạn thì thoải mái. Nếu muốn đăng lên mạng, hãy ghi rõ tên bài, tác giả và ca sĩ gốc, và tìm hiểu quy định bản quyền của nền tảng (YouTube, TikTok, Spotify…): bài có thể bị chặn, tắt tiếng, hoặc doanh thu chuyển cho chủ sở hữu bài gốc. Phát hành có thu tiền thì cần xin phép hoặc mua giấy phép cover từ người giữ bản quyền.</p>
+<p>Remake được 2–3 bài, bạn sẽ thấy các “công thức” lặp lại: cách xếp đoạn, cách dồn trước điệp khúc, cách chọn tiếng. Đó là lúc chuyển sang viết bài của riêng mình (xem bài “Từ vòng hợp âm đến một bài hát”).</p>`
     }
   ];
 
@@ -332,6 +439,20 @@ ${chordTable('C', [
         ['p5', 'Vòng I – V – vi – IV với đảo phím mượt'],
         ['p6', 'Tay trái nốt gốc, tay phải hợp âm'],
         ['p7', 'Đệm hát một bài ballad']
+      ]
+    },
+    {
+      id: 'remake', title: 'Remake một bài yêu thích', items: [
+        ['r1', 'Chọn bài: ít hợp âm, ít nhạc cụ, tempo không đổi'],
+        ['r2', 'Lập bản đồ bài: các đoạn, thời điểm, số ô nhịp'],
+        ['r3', 'Đo tempo, khớp với metronome sau 16 ô nhịp'],
+        ['r4', 'Tìm giọng và nốt chủ, kiểm tra bằng âm giai'],
+        ['r5', 'Dò dãy nốt bass và vòng hợp âm của cả bài'],
+        ['r6', 'Dò giai điệu chính / hook'],
+        ['r7', 'Dựng trống, bass, hợp âm trong FL Studio theo marker'],
+        ['r8', 'Thêm lớp phụ và hiệu ứng chuyển đoạn'],
+        ['r9', 'Cân âm lượng và so sánh với bản gốc ở cùng độ lớn'],
+        ['r10', 'Xuất bài, nghỉ một ngày, sửa 3 chỗ, cho người khác nghe']
       ]
     },
     {

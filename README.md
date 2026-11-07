@@ -12,7 +12,7 @@ Web học nhạc lý cho người chơi guitar, piano và làm nhạc trên FL S
 - **Bản đồ cần đàn**: tất cả nốt, nốt tự nhiên, tìm một nốt, bản đồ quãng.
 - **Luyện tập**: dựng hợp âm (bấm đủ các nốt của một hợp âm, có bấm giờ, thời gian trung bình và nhanh nhất), đọc tên hợp âm từ các nốt, nghe quãng, nghe loại hợp âm, đố nốt trên cần đàn, nhạc lý nhanh, có thống kê điểm.
 - **Metronome** (gõ để đo tempo, chia nhỏ phách, tự tăng tốc) và **tuner** dùng micro.
-- **Bài học và lộ trình** cho guitar, piano, FL Studio và sáng tác, kèm một chuỗi bài về hợp âm màu: đọc công thức, hợp âm 7, sus/6/add9, hợp âm mở rộng 9–13 và hợp âm biến, cách thêm màu cho vòng hợp âm, cách luyện để suy hợp âm nhanh.
+- **Bài học và lộ trình** cho guitar, piano, FL Studio và sáng tác, kèm một chuỗi bài về hợp âm màu: đọc công thức, hợp âm 7, sus/6/add9, hợp âm mở rộng 9–13 và hợp âm biến, cách thêm màu cho vòng hợp âm, cách luyện để suy hợp âm nhanh; và chuỗi 4 bài remake một bài yêu thích trong FL Studio (chọn bài, tìm tempo/giọng/hợp âm, dựng lại, mix theo bản gốc).
 - **Cài đặt**: tên nốt C D E hoặc Đô Rê Mi, 8 cách lên dây (kể cả ukulele và bass), số phím, cần đàn cho người thuận tay trái, giao diện sáng/tối.
 
 ## Chạy thử trên máy
