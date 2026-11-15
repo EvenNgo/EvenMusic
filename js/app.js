@@ -50,7 +50,8 @@
     train: { mode: 'build', buildSet: ['maj', 'min', 'dim', 'aug'], buildRoots: 'natural', nameShuffle: false, ivSet: [2, 3, 4, 5, 7, 12], ivDir: 'up', ivSet: [2, 3, 4, 5, 7, 12], ivDir: 'up', chordSet: ['maj', 'min', 'dim', 'aug'], fretMax: 12, fretNatural: true, stats: {} },
     metro: { bpm: 80, sig: '4/4', sub: 1, accent: true, trainer: false, step: 5, bars: 4, max: 140 },
     tuner: { a4: 440 },
-    road: {}
+    road: {},
+    path: { done: {}, light: {}, skip: {}, notes: {}, checks: {}, log: [], focus: null, weekGoal: 3 }
   };
   const clone = o => JSON.parse(JSON.stringify(o));
   function merge(base, over) {
@@ -311,7 +312,7 @@
   /* ---------------- Điều hướng ---------------- */
   const ROUTES = {
     'hop-am': 'chord', 'am-giai': 'scale', 'vong-hop-am': 'prog', 'nhan-dien': 'ident',
-    'vong-quang-5': 'circle', 'can-dan': 'fret', 'luyen-tap': 'train', 'cong-cu': 'tools', 'bai-hoc': 'learn'
+    'vong-quang-5': 'circle', 'can-dan': 'fret', 'luyen-tap': 'train', 'cong-cu': 'tools', 'bai-hoc': 'learn', 'hom-nay': 'path'
   };
   const SLUG = {};
   Object.keys(ROUTES).forEach(k => { SLUG[ROUTES[k]] = k; });
@@ -319,7 +320,7 @@
 
   function route() {
     const slug = (location.hash || '').replace('#', '');
-    const view = ROUTES[slug] || 'chord';
+    const view = ROUTES[slug] || 'path'; // mặc định mở trang “Hôm nay”
     show(view);
   }
   function show(view) {
