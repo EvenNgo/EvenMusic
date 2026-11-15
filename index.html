@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Big+Shoulders+Display:wght@600;800&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
 <a class="skip" href="#main">Bỏ qua, đến nội dung chính</a>
@@ -39,6 +39,7 @@
   </header>
 
   <nav class="rail" id="rail" aria-label="Các công cụ">
+    <a href="#hom-nay" data-view="path" class="rail-today">Hôm nay</a>
     <p class="rail-group">Tra cứu</p>
     <a href="#hop-am" data-view="chord">Hợp âm</a>
     <a href="#am-giai" data-view="scale">Âm giai</a>
@@ -54,6 +55,22 @@
   </nav>
 
   <main id="main" tabindex="-1">
+
+    <!-- ===================== HÔM NAY ===================== -->
+    <section class="view" id="view-path" aria-labelledby="p-title" hidden>
+      <h1 id="p-title" class="page-title">Hôm nay</h1>
+      <p class="desc">Mỗi lần mở trang, việc tiếp theo đã được chọn sẵn. Làm từng bước nhỏ, theo hướng dẫn, tự tick khi đạt tiêu chí. Tiến độ lưu trên trình duyệt này.</p>
+      <div id="p-week"></div>
+      <div id="p-today"></div>
+      <div id="p-tips" class="lessons"></div>
+      <h2>Cả lộ trình</h2>
+      <div id="p-path" class="path"></div>
+      <h2>Nhật ký tập</h2>
+      <div id="p-log"></div>
+      <h2>Kênh học thêm</h2>
+      <p class="hint">Link mở trang tìm kiếm YouTube, nên luôn ra đúng kênh, kể cả khi kênh đổi địa chỉ. Kênh tiếng Anh có thể bật phụ đề tự dịch sang tiếng Việt.</p>
+      <div id="p-res" class="res-wrap"></div>
+    </section>
 
     <!-- ===================== HỢP ÂM ===================== -->
     <section class="view" id="view-chord" aria-labelledby="c-name" hidden>
@@ -353,7 +370,7 @@
     <!-- ===================== BÀI HỌC ===================== -->
     <section class="view" id="view-learn" aria-labelledby="l-title" hidden>
       <h1 id="l-title" class="page-title">Bài học &amp; lộ trình</h1>
-      <p class="desc">Đánh dấu những gì bạn đã làm được. Tiến độ được lưu trên trình duyệt này.</p>
+      <p class="desc">Muốn được dẫn từng bước, có hướng dẫn chi tiết và tiêu chí hoàn thành? Mở trang <a href="#hom-nay">Hôm nay</a>. Danh sách dưới đây là bản tóm tắt để tự đánh dấu.</p>
       <div id="l-road" class="road"></div>
       <h2>Bài học</h2>
       <div id="l-lessons" class="lessons"></div>
@@ -386,21 +403,23 @@
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script src="js/theory.js?v=6"></script>
-<script src="js/midi.js?v=6"></script>
-<script src="js/audio.js?v=6"></script>
-<script src="js/render.js?v=6"></script>
-<script src="js/lessons.js?v=6"></script>
-<script src="js/app.js?v=6"></script>
-<script src="js/views/chord.js?v=6"></script>
-<script src="js/views/scale.js?v=6"></script>
-<script src="js/views/prog.js?v=6"></script>
-<script src="js/views/ident.js?v=6"></script>
-<script src="js/views/circle.js?v=6"></script>
-<script src="js/views/fret.js?v=6"></script>
-<script src="js/views/train.js?v=6"></script>
-<script src="js/views/tools.js?v=6"></script>
-<script src="js/views/learn.js?v=6"></script>
+<script src="js/theory.js?v=7"></script>
+<script src="js/midi.js?v=7"></script>
+<script src="js/audio.js?v=7"></script>
+<script src="js/render.js?v=7"></script>
+<script src="js/lessons.js?v=7"></script>
+<script src="js/path.js?v=7"></script>
+<script src="js/app.js?v=7"></script>
+<script src="js/views/chord.js?v=7"></script>
+<script src="js/views/scale.js?v=7"></script>
+<script src="js/views/prog.js?v=7"></script>
+<script src="js/views/ident.js?v=7"></script>
+<script src="js/views/circle.js?v=7"></script>
+<script src="js/views/fret.js?v=7"></script>
+<script src="js/views/train.js?v=7"></script>
+<script src="js/views/tools.js?v=7"></script>
+<script src="js/views/learn.js?v=7"></script>
+<script src="js/views/path.js?v=7"></script>
 <script>App.start();</script>
 </body>
 </html>
